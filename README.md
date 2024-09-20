@@ -2,7 +2,13 @@
 
 >Create a short document, with the names of group members. You should briefly describe your collaboration tool(s) you’ll use as a group, including for communication, code sharing, and project documentation. You should have identified your data sources, where the data can be found, and how to load it. And you should have created at least a logical model for your normalized database, and produced an Entity-Relationship (ER) diagram documenting your database design.
 
+## Assignment
+
+See [project_assignment.pdf](docs/project_assignment.pdf)
+
 ## Project Team
+
+**Team Name: <TBD>**
 
 - Kevin Havis [kevinhav](https://github.com/kevinhav/)
 - Kim Koon 
@@ -22,7 +28,7 @@
 
 See [solution_architecture.md](docs/solution_architecture.md)
 
-## Default Directory Structure
+## Directory Structure
 
 ```
 ├── .cloud              # for storing cloud configuration files and templates (e.g. ARM, Terraform, etc)
