@@ -20,7 +20,7 @@
 
 ## ER Diagram
 
-
+See [solution_architecture.md](docs/solution_architecture.md)
 
 ## Default Directory Structure
 
