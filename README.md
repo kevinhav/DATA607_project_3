@@ -1,16 +1,26 @@
-# Data Science Lifecycle Base Repo
+# DATA 607 Project 3
 
-Use this repo as a template repository for data science projects using the Data Science Life Cycle Process. This repo is meant to serve as a launch off point. Our goal is to introduce only **minimum viable opinions** into the structure of this repo in order to make this repository/framework useful across a variety of data science projects and workflows. Therefore, we will tend to err to the side of omitting something if we're not confident that it's widely useful or think it's overly opinionated. That shouldn't stop you from forking this repo and adapting it to fit the needs of your project/team/organization.
+>Create a short document, with the names of group members. You should briefly describe your collaboration tool(s) you’ll use as a group, including for communication, code sharing, and project documentation. You should have identified your data sources, where the data can be found, and how to load it. And you should have created at least a logical model for your normalized database, and produced an Entity-Relationship (ER) diagram documenting your database design.
 
-With that in mind, if there is something that you think we're missing or should change, open an issue and we'll talk!
+## Project Team
 
-## Get started.
+- Kevin Havis [kevinhav](https://github.com/kevinhav/)
+- Kim Koon 
+- Matthew Tillmawitz
 
-The only manual step required is that you have to manually create the labels. The label names, descriptions, and color codes can be found in the [.github/labels.yaml](/.github/labels.yaml) file. For more information on creating labels, review the GitHub docs [here](https://help.github.com/en/github/managing-your-work-on-github/creating-a-label).
+## Collaboration Tools
 
-## Contributing
+### Communication
 
-Issues and suggestions for this template repo should be opened in the main [dslp repo](https://github.com/MicrosoftDSST/dslp/issues).
+### Code Sharing
+
+### Project Documentation
+
+## Data Sources
+
+## ER Diagram
+
+
 
 ## Default Directory Structure
 
