@@ -11,8 +11,8 @@ See [project_assignment.pdf](docs/project_assignment.pdf)
 **Team Name: <TBD>**
 
 - Kevin Havis [kevinhav](https://github.com/kevinhav/)
-- Kim Koon 
-- Matthew Tillmawitz
+- Kim Koon [koonkimb](https://github.com/koonkimb)
+- Matthew Tillmawitz [Tillmawitz](https://github.com/Tillmawitz)
 
 ## Collaboration Tools
 
