@@ -16,13 +16,35 @@ See [project_assignment.pdf](docs/project_assignment.pdf)
 
 ## Collaboration Tools
 
+- Github
+- Github Projects
+
 ### Communication
+
+- Github (Pull Requests)
+- Slack
 
 ### Code Sharing
 
+- Github Repo
+
 ### Project Documentation
 
+- Github Issues and markdown files
+
 ## Data Sources
+
+- Colarado / Washington / Colarado / New York must post salaries
+    - Salary expectations
+    - Use salary as a metric vs the skills listed in the job descriptions
+    - Scraping Indeed.com, Monster, etc.
+- Online courses - what courses are most popular?
+    - Web scraping
+        - LinkedIn Learning
+        - Coursera
+        - Degreed / Udemy
+        - Rate of popularity?
+- 
 
 ## ER Diagram
 
