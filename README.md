@@ -16,35 +16,51 @@ See [project_assignment.pdf](docs/project_assignment.pdf)
 
 ## Collaboration Tools
 
-- Github
-- Github Projects
+We will leverage GitHub and GitHub projects through this project.
+
+### GitHub
+
+We will work out of a shared repository with a common organization (see Repo Directory). Our branching strategy will be to create individual branches, periodically reviewing and then merging to the main branch. We will use industry standard GitHub practices to share code and maintain proper version control.
+
+### GitHub Projects
+
+To keep track of our progress, we will create a GitHub project. This project will use a minimal version of the [Data Science Lifecycle Process](https://github.com/dslp/dslp) as a framework.
+
+This framework divides the project into phases; Ask, Data, Exploration, Experimentation, and Modeling. The framework emphasizes documenting the process at each stage, creating an audit trail.
+
+We will use templated GitHub issues to track out work at each phase. These will be submitted along with our repo as part of our project submission.
 
 ### Communication
 
-- Github (Pull Requests)
-- Slack
-
-### Code Sharing
-
-- Github Repo
+We will use Slack as our primary method of direct communication. We will schedule a weekly standup to monitor our progress and check in with each other.
 
 ### Project Documentation
 
-- Github Issues and markdown files
+As mentioned above, we will raise GitHub issues as templated documents for each stage of the project. This will record decisions made, questions answered, and overall serve as an audit to our thought process.
 
 ## Data Sources
+
+We have identified three main sources of data for our project
+
+### Market salaries and job posting descriptions
 
 - Colarado / Washington / Colarado / New York must post salaries
     - Salary expectations
     - Use salary as a metric vs the skills listed in the job descriptions
     - Scraping Indeed.com, Monster, etc.
+
+### Trends of self-paced learning resources
+
 - Online courses - what courses are most popular?
     - Web scraping
         - LinkedIn Learning
         - Coursera
         - Degreed / Udemy
         - Rate of popularity?
-- 
+
+### National labor data
+
+[National Labor Data on Skills](https://www.bls.gov/emp/data/skills-data.htm)
 
 ## ER Diagram
 
