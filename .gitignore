@@ -1,5 +1,10 @@
-data/**
-
+# R Studio
+.Rhistory
+.RData
+renv/library/
+renv/cache
+.Rproj.user/
+*.Rproj
 
 
 
