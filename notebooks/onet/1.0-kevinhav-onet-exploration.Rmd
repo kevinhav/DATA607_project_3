@@ -1,0 +1,171 @@
+---
+title: "1.0-kevinhav-onet-exploration"
+author: "Kevin Havis"
+date: "2024-09-27"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(knitr)
+```
+
+
+## Employment Projection Data Exploration
+
+This dataset is produced by the U.S. Bureau of Labor to project growth in specific occupations. For this most recent dataset (2022-2023), they also included skills data from O*NET, a large database of occupational data. They organize these skills into categories and rate them on a scale from 1-5 on their importance to the given occupation.
+
+
+```{r}
+# Read data
+df <- readxl::read_xlsx("us_bol_employment_skills.xlsx", skip = 1)
+
+# Clean column names
+df_ds <- janitor::clean_names(df)
+
+# Filter for data scientists
+
+ds_soc_code = "15-2051"
+
+df_ds <- df_ds |> 
+  filter(x2023_national_employment_matrix_code == ds_soc_code)
+```
+
+```{r}
+kable(head(df_ds))
+```
+
+
+### Top Skill Categories by Employment Projection Skills Score
+
+```{r}
+top_categories <- df_ds |> 
+  arrange(desc(ep_skills_score)) |> 
+  select(ep_skills_category, ep_skills_score) |> 
+  distinct(ep_skills_category, .keep_all = TRUE) |> 
+  group_by(ep_skills_category) |> 
+  summarize(ep_skills_score = sum(ep_skills_score))
+
+ggplot(top_categories, aes(
+    x = ep_skills_score, 
+    y = fct_reorder(ep_skills_category, ep_skills_score))) +
+  geom_bar(stat = 'identity')
+```
+
+
+### Top 20 Skills by ONET SOC Element data value
+
+```{r}
+top_skills <- df_ds |> 
+  arrange(desc(o_net_soc_data_value)) |> 
+  select(ep_skills_category, o_net_soc_element_name, o_net_soc_data_value) |> 
+  slice(1:20) |> 
+  distinct(o_net_soc_element_name, .keep_all = TRUE)
+
+ggplot(top_skills, aes(x = o_net_soc_data_value, 
+                       y = fct_reorder(o_net_soc_element_name, o_net_soc_data_value), 
+                       fill = ep_skills_category)) +
+  geom_bar(stat = 'identity')
+
+```
+
+## O*NET Data
+
+O*NET has an extensive database of interesting attributes related to occupations and work in general, from skills, to personality types, to work values.
+
+While all of this would be interesting, for this analysis I'm going to limit our review to their Knowledge, Skills, and Abilities datasets, specifically for data scientists.
+
+Note that O*NET currently represents the "Data Scientist" occupation by two more specific occupations; "Business Intelligence Analysts" and "Clinical Data Managers"
+
+### Knowledge
+
+Knowledge refers to domain knowledge relevant to a role. ONET ranks Knowledge for an occupation by **Level**, or the degree of expertise, and **Importance**, or how critical the knowledge is to the job.
+
+```{r}
+knowledge <- readxl::read_xlsx("Knowledge.xlsx")
+
+knowledge <- janitor::clean_names(knowledge)
+
+knowledge_ds <- knowledge |> 
+  filter(title %in%(c("Business Intelligence Analysts", "Clinical Data Managers")))
+
+kable(head(knowledge_ds))
+```
+
+
+```{r}
+knowledge_gb <- knowledge_ds |> 
+  group_by(element_name, scale_name) |> 
+  summarize(value = sum(data_value))
+
+ggplot(knowledge_gb, aes(
+  x = value,
+  y = fct_reorder(element_name, value))) +
+  geom_bar(stat='identity') +
+  facet_wrap("scale_name")
+```
+### Abilities
+
+Abilities refer to what we could consider the "innate" talents of an individual. It is again evaluated on **Level** and **Importance**, same as Knowledge.
+
+Fortunately for me, explosive strength is not a very relevant ability to data science.
+
+```{r}
+abil <- readxl::read_xlsx("Abilities.xlsx")
+
+abil <- janitor::clean_names(abil)
+
+abil_ds <- abil |> 
+  filter(title %in%(c("Business Intelligence Analysts", "Clinical Data Managers")))
+
+kable(head(abil_ds))
+```
+```{r, fig.height=10}
+abil_gb <- abil_ds |> 
+  group_by(element_name, scale_name) |> 
+  summarize(value = sum(data_value))
+
+ggplot(abil_gb, aes(
+  x = value,
+  y = fct_reorder(element_name, value))) +
+  geom_bar(stat='identity') +
+  facet_wrap("scale_name") +
+  theme(axis.text.y = element_text(size = 8),   # Adjust y-axis text size
+        plot.margin = margin(1, 1, 1, 1, "cm")) # Adjust margins
+
+```
+
+### Skills
+
+Finally we will look at skills. We saw a preview of this with the Employment Projection data, but this is the raw data direct from O*NET.
+
+```{r}
+skills <- readxl::read_xlsx("Skills-1.xlsx")
+
+skills <- janitor::clean_names(skills)
+
+skills_ds <- skills |> 
+  filter(title %in%(c("Business Intelligence Analysts", "Clinical Data Managers")))
+
+kable(head(skills_ds))
+```
+
+```{r, fig.height=10}
+skills_gb <- skills_ds |> 
+  group_by(element_name, scale_name) |> 
+  summarize(value = sum(data_value))
+
+ggplot(skills_gb, aes(
+  x = value,
+  y = fct_reorder(element_name, value))) +
+  geom_bar(stat='identity') +
+  facet_wrap("scale_name") +
+  theme(axis.text.y = element_text(size = 8),   # Adjust y-axis text size
+        plot.margin = margin(1, 1, 1, 1, "cm")) # Adjust margins
+
+```
