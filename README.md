@@ -61,6 +61,7 @@ We have identified three main sources of data for our project
 ### National labor data
 
 [National Labor Data on Skills](https://www.bls.gov/emp/data/skills-data.htm)
+[O*NET Data Files](https://www.onetcenter.org/database.html#individual-files)
 
 ## ER Diagram
 
