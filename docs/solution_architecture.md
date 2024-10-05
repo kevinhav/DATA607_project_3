@@ -152,6 +152,7 @@ Skills are rated by Level and Importance.
 | not_relevant       | Character(1)           | Not relevant for the occupation (Y=yes, N=no)                |
 | date               | Character(7)           | Date when data was updated                                   |
 | domain_source      | Character Varying(30)  | Source of the data                                           |
+| soc_name           | Character              | Title of SOC                                                 |
 
 [Additional details](https://www.onetcenter.org/dictionary/29.0/text/skills.html)
 
@@ -169,6 +170,7 @@ They are not quantitatively ranked per occupation, but are flagged as "In demand
 | commodity_title | Character Varying(150) | UNSPSC commodity title (see UNSPSC Reference)                               |
 | hot_technology  | Character(1)           | Whether example is classified as a hot technology (Y=yes, N=no)             |
 | in_demand       | Character(1)           | Whether example is classified as in demand for the occupation (Y=yes, N=no) |
+| soc_name        | Character              | Title of SOC                                                                |
 
 [Additional details](https://www.onetcenter.org/dictionary/29.0/text/technology_skills.html)
 
@@ -198,6 +200,7 @@ erDiagram
         not_relevant Character
         date Character
         domain_source Character
+        soc_name Character
     }
 
     alt_titles_df {
@@ -260,6 +263,7 @@ erDiagram
         not_relevant Character
         date Character
         domain_source Character
+        soc_name Character
     }
 
     tech_df {
@@ -269,6 +273,7 @@ erDiagram
         commodity_title Character
         hot_technology Character
         in_demand Character
+        soc_name Character
     }
 
     OCCUPATIONS ||--o| activities_df : has
