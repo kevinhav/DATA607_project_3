@@ -58,12 +58,24 @@ We have identified three main sources of data for our project
         - Degreed / Udemy
         - Rate of popularity?
 
-### National labor data
+### O*Net Occupational Data
+
+The O*NET database includes information on skills, abilities, knowledges, work activities, and interests associated with occupations. This information can be used to facilitate career exploration, vocational counseling, and a variety of human resources functions, such as developing job orders and position descriptions and aligning training with current workplace needs. 
+
+We will use the below O*NET data to form the baseline of our research.
+
+- Skills
+- Abilities
+- Work Activities
+- Education
+- Knowledge
+- Technology Skills
+- Alternate Titles
 
 [National Labor Data on Skills](https://www.bls.gov/emp/data/skills-data.htm)
 [O*NET Data Files](https://www.onetcenter.org/database.html#individual-files)
 
-## ER Diagram
+## Data Dictionary & ER Diagram
 
 See [solution_architecture.md](docs/solution_architecture.md)
 
