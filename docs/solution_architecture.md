@@ -184,7 +184,7 @@ erDiagram
         soc_name Character
     }
 
-    WORK_ACTIVITIES {
+    activities_df {
         o_net_soc_code Character
         element_id Character
         element_name Character
@@ -200,7 +200,7 @@ erDiagram
         domain_source Character
     }
 
-    ALTERNATE_TITLES {
+    alt_titles_df {
         o_net_soc_code Character
         alternate_title Character
         short_title Character
@@ -208,7 +208,7 @@ erDiagram
         soc_name Character
     }
 
-    EDUCATION_TRAINING {
+    education_df {
         o_net_soc_code Character
         title Character
         element_id Character
@@ -227,7 +227,7 @@ erDiagram
         soc_name Character
     }
 
-    KNOWLEDGE {
+    knowledge_df {
         o_net_soc_code Character
         title Character
         element_id Character
@@ -246,7 +246,7 @@ erDiagram
         soc_name Character
     }
 
-    SKILLS {
+    skills_df {
         o_net_soc_code Character
         element_id Character
         element_name Character
@@ -262,7 +262,7 @@ erDiagram
         domain_source Character
     }
 
-    TECHNOLOGY_SKILLS {
+    tech_df {
         o_net_soc_code Character
         example Character
         commodity_code Integer
@@ -271,10 +271,10 @@ erDiagram
         in_demand Character
     }
 
-    OCCUPATIONS ||--o| WORK_ACTIVITIES : has
-    OCCUPATIONS ||--o| ALTERNATE_TITLES : has
-    OCCUPATIONS ||--o| EDUCATION_TRAINING : has
-    OCCUPATIONS ||--o| KNOWLEDGE : has
-    OCCUPATIONS ||--o| SKILLS : has
-    OCCUPATIONS ||--o| TECHNOLOGY_SKILLS : has
+    OCCUPATIONS ||--o| activities_df : has
+    OCCUPATIONS ||--o| alt_titles_df : has
+    OCCUPATIONS ||--o| education_df : has
+    OCCUPATIONS ||--o| knowledge_df : has
+    OCCUPATIONS ||--o| skills_df : has
+    OCCUPATIONS ||--o| tech_df : has
 ```
