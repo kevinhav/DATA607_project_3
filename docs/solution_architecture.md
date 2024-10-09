@@ -174,6 +174,12 @@ They are not quantitatively ranked per occupation, but are flagged as "In demand
 
 [Additional details](https://www.onetcenter.org/dictionary/29.0/text/technology_skills.html)
 
+## LinkedIn Course Data
+
+
+## Stackoverflow Job Data
+
+
 ### Diagram
 
 ``` mermaid
@@ -276,10 +282,24 @@ erDiagram
         soc_name Character
     }
 
+    linkedIn_courses {
+        course_title
+        viewership
+        updated_date
+        skill?
+        original_date?
+    }
+
+    stack_overflow_job {
+     
+    }
+        
+
     OCCUPATIONS ||--o| activities_df : has
     OCCUPATIONS ||--o| alt_titles_df : has
     OCCUPATIONS ||--o| education_df : has
     OCCUPATIONS ||--o| knowledge_df : has
     OCCUPATIONS ||--o| skills_df : has
     OCCUPATIONS ||--o| tech_df : has
+    linkedIn_courses ||--o| tech_df: joins to
 ```
