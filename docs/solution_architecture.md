@@ -286,8 +286,8 @@ erDiagram
         course_title
         viewership
         updated_date
-        skill?
-        original_date?
+        skill
+        original_date
     }
 
     stack_overflow_job {
@@ -301,5 +301,5 @@ erDiagram
     OCCUPATIONS ||--o| knowledge_df : has
     OCCUPATIONS ||--o| skills_df : has
     OCCUPATIONS ||--o| tech_df : has
-    linkedIn_courses ||--o| tech_df: joins to
+    linkedIn_courses ||--o| tech_df: joins_to
 ```
