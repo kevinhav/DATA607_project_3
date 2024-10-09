@@ -289,11 +289,7 @@ erDiagram
         skill
         original_date
     }
-
-    stack_overflow_job {
-     
-    }
-        
+      
 
     OCCUPATIONS ||--o| activities_df : has
     OCCUPATIONS ||--o| alt_titles_df : has
