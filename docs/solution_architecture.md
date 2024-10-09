@@ -283,11 +283,11 @@ erDiagram
     }
 
     linkedIn_courses {
-        course_title
-        viewership
-        updated_date
-        skill
-        original_date
+        course_title Character
+        viewership Integer
+        updated_date Date
+        skill Character
+        original_date Date
     }
       
 
