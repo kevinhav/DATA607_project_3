@@ -6,7 +6,7 @@ url_2024 =  "https://www.onetcenter.org/dl_files/database/db_29_0_text.zip"
 url_2022 = "https://www.onetcenter.org/dl_files/database/db_27_0_text.zip"
 
 # Not using, has same data as db_29
-url_2023 =  "https://www.onetcenter.org/dl_files/database/db_28_0_text.zip"
+# url_2023 =  "https://www.onetcenter.org/dl_files/database/db_28_0_text.zip"
 
 
 # Occupations of interest
@@ -17,17 +17,18 @@ soc_ids = c("15-2051",     # data science
             "15-2051.02"   # Clinical data manager
 )
 
-# Filter for occupations of interest
-filter_soc <- function(data, soc_code = o_net_soc_code, soc_ids = soc_ids){
+# Filter, clean, and add SOC names to each dataframe
+preprocess <- function(data){
   
   data |> 
-    filter({{soc_code}} %in% soc_ids) |> 
+    clean_names() |> 
+    filter(o_net_soc_code %in% soc_ids) |> 
     mutate(soc_name = case_when(
-      {{soc_code}} == "15-2051"    ~ "data_scientist",
-      {{soc_code}} == "15-2051.00" ~ "data_scientist",
-      {{soc_code}} == "15-2041.00" ~ "statistician",
-      {{soc_code}} == "15-2051.01" ~ "business_intelligence_analyst",
-      {{soc_code}} == "15-2051.02" ~ "clinical_data_manager",
+      o_net_soc_code == "15-2051"    ~ "data_scientist",
+      o_net_soc_code == "15-2051.00" ~ "data_scientist",
+      o_net_soc_code == "15-2041.00" ~ "statistician",
+      o_net_soc_code == "15-2051.01" ~ "business_intelligence_analyst",
+      o_net_soc_code == "15-2051.02" ~ "clinical_data_manager",
       TRUE                           ~ NA_character_
     ))
   
@@ -39,7 +40,7 @@ load_historical_onet <- function(url){
   # Create a temporary file for the zip
   tmp_zip <- tempfile(fileext = ".zip")
   
-  # Download the zip file
+  # Download the zip file from the url
   curl_download(url, tmp_zip)
   
   # Unzip into a temporary directory
@@ -57,32 +58,25 @@ load_historical_onet <- function(url){
   education_path <- tsv_files[basename(tsv_files) == "Education, Training, and Experience.txt"]
   activities_path <- tsv_files[basename(tsv_files) == "Work Activities.txt"]
   
-  #print(tsv_files)
   
-  # Get each data set we are interested in by their index
+  # Get each data set we are interested in and preprocess
   tech <- read_tsv(tech_path,  show_col_types = FALSE) |> 
-    clean_names() |> 
-    filter(o_net_soc_code %in% soc_ids)
+    preprocess()
   
   skills <- read_tsv(skills_path,  show_col_types = FALSE)|> 
-    clean_names() |> 
-    filter(o_net_soc_code %in% soc_ids)
+    preprocess()
   
   abilities <- read_tsv(abilities_path,  show_col_types = FALSE)|> 
-    clean_names() |> 
-    filter(o_net_soc_code %in% soc_ids)
-  
+    preprocess()
+    
   knowledge <- read_tsv(knowledge_path, show_col_types = FALSE)|> 
-    clean_names() |> 
-    filter(o_net_soc_code %in% soc_ids)
+    preprocess()
   
   education <- read_tsv(education_path,  show_col_types = FALSE)|> 
-    clean_names() |> 
-    filter(o_net_soc_code %in% soc_ids)
+    preprocess()
   
   activities <- read_tsv(activities_path,  show_col_types = FALSE)|> 
-    clean_names() |> 
-    filter(o_net_soc_code %in% soc_ids)
+    preprocess()
   
   # Combine into a list of dataframes
   onet <- list(
