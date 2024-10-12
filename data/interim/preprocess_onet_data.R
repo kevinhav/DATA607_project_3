@@ -1,6 +1,7 @@
 
 # Load raw data
 source('data/raw/load_onet_data.R')
+source('data/raw/load_onet_historical_data.R')
 
 
 # Occupations of interest
