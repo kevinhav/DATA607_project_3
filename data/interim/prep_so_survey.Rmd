@@ -1,0 +1,71 @@
+---
+title: "Stack Overflow Data"
+author: "Matthew Tillmawitz"
+date: "2024-10-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+## Reading in the data
+
+You may need to adjust the data_location value to read from the relevant location on your local machine
+
+```{r raw data}
+data_location <- 'DATA607_project_3/data/raw/stack-overflow-developer-survey-2024/survey_results_public.csv'
+raw_data <- read_csv(data_location)
+head(raw_data)
+```
+
+## Basic observations on the data
+
+There are 226 columns, however only a few will be relevant for our analysis.
+
+```{r column names}
+colnames(raw_data)
+```
+
+We can see there are over 65,000 respondants which is a healthy survey size.
+
+```{r number rows raw}
+nrow(raw_data)
+```
+
+Looking at the DevType column we can see there is an explicit value for data scientists, although as we will see later we may want to expand our definition of data scientist to include roles which may perform the same kind of work but fall under a different title due to variation in role definitions in organizations.
+
+```{r unique jobs}
+unique(raw_data$DevType)
+```
+
+## Extracting relevant data
+
+So that we can get a more interesting sample we are going to expand our DevType beyond the data scientist category to include similar roles that can be filled by data scientists. Only the columns which track technologies actively used are kept, as columns dealing with desired or admired technologies may be useful for forecasting but are not relevant for current analysis.
+
+```{r filtering unneeded data}
+job_family <- c("Data scientist or machine learning specialist", "Data engineer", "Developer, AI", "Data or business analyst")
+
+relevant_data <- raw_data |>
+  select(DevType, LanguageHaveWorkedWith, DatabaseHaveWorkedWith, PlatformHaveWorkedWith, WebframeHaveWorkedWith, EmbeddedHaveWorkedWith, MiscTechHaveWorkedWith, ToolsTechHaveWorkedWith, NEWCollabToolsHaveWorkedWith, OfficeStackAsyncHaveWorkedWith, OfficeStackSyncHaveWorkedWith, AISearchDevHaveWorkedWith, ConvertedCompYearly) |>
+  filter(DevType %in% job_family) |>
+  drop_na(ConvertedCompYearly)
+head(relevant_data)
+```
+
+After restricting the data to Data scientists who reported their salaries 
+
+```{r number data scientists}
+nrow(relevant_data)
+```
+
+An important note on the form of the data, the columns that contain skills and technologies can have multiple values and are semicolon delimited. Choosing to keep the data in this form allows simple salary comparison and selection which is important information to retain for our analysis. Additionally it takes significantly less memory than pivoting the columns wider which is relevant when running a database and performing analysis on the same machine. As we perform our analysis it will be simple to pivot the columns needed or check for substrings where relevant.
+
+```{r write to csv}
+# I had to use the absolute path on my machine, change for your local as needed but if you commit make sure to let us know
+#file_location <- '/Users/matttillman/School/DATA607_project_3/data/processed/stack_overflow_jobs.csv'
+
+relevant_data |>
+  write_csv(file = file_location, append=FALSE)
+```
