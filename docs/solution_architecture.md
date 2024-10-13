@@ -176,9 +176,27 @@ They are not quantitatively ranked per occupation, but are flagged as "In demand
 
 ## LinkedIn Course Data
 
-
 ## Stackoverflow Job Data
 
+Every year Stack Overflow conducts a survey of users of their products. This survey recruits respondents through various outreach channels including blog posts, onsite ads, and social media posts and is considered on of the best sources of information on tech jobs and trends due to the high engagement of tech workers with their products. The public survey results for all years the survey has been conducted can be found [here](https://survey.stackoverflow.co/).
+
+The survey covers a wide range of topics dealing with the developer experience and technological developments but the fields we are interested in deal largely with the technologies that developers work with. By connecting the technologies used to the adjusted salaries of specific categories of respondents we can get an idea of what technical skills are considered most valuable for data scientists. Additionally, we can use fields dealing with collaboration and communication tools as proxies for certain soft skills. A breakdown of the fields taken from the raw data can be found below.
+
+| column name                    | data type | column content                                                                                                            |
+| ------------------------------ | --------- | ------------------------------------------------------------------------------------------------------------------------- |
+| DevType                        | Character | Self-reported developer role chosen from a predefined list of roles                                                       |
+| LanguageHaveWorkedWith         | Character | A semicolon delimited string of languages used professionally                                                             |
+| DatabaseHaveWorkedWith         | Character | A semicolon delimited string of databases used professionally                                                             |
+| PlatformHaveWorkedWith         | Character | A semicolon delimited string of hosting platforms used professionally (things like AWS or Azure)                          |
+| WebframeHaveWorkedWith         | Character | A semicolon delimited string of front end web frameworks used professionally                                              |
+| EmbeddedHaveWorkedWith         | Character | A semicolon delimited string of embedded technology tools used professionally                                             |
+| MiscTechHaveWorkedWith         | Character | A semicolon delimited string of technologies and libraries that do not fit into previous categories                       |
+| ToolsTechHaveWorkedWith        | Character | A semicolon delimited string of build, deployment, and development tools used professionally                              |
+| NEWCollabToolsHaveWorkedWith   | Character | A semicolon delimited string of IDEs or other editors used, both local and remote                                         |
+| OfficeStackAsyncHaveWorkedWith | Character | A semicolon delimited string of communication tools used on teams to communicate asynchronously in a professional setting |
+| OfficeStackSyncHaveWorkedWith  | Character | A semicolon delimited string of communication tools used on teams to communicate synchronously in a professional setting  |
+| AISearchDevHaveWorkedWith      | Character | A semicolon delimited string of AI tools used professionally                                                              |
+| ConvertedCompYearly            | Double    | The annual salary of the respondant converted to USD using exchange rates from June 11, 2024                              |
 
 ### Diagram
 
