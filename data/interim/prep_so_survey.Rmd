@@ -8,6 +8,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+library(arrow)
 ```
 
 ## Reading in the data
@@ -15,8 +16,9 @@ library(tidyverse)
 You may need to adjust the data_location value to read from the relevant location on your local machine
 
 ```{r raw data}
-data_location <- 'DATA607_project_3/data/raw/stack-overflow-developer-survey-2024/survey_results_public.csv'
-raw_data <- read_csv(data_location)
+# I had to use the absolute path on my machine, change for your local as needed but if you commit make sure to let us know
+#data_location <- '/Users/matttillman/School/DATA607_project_3/data/raw/stack-overflow-developer-survey-2024/survey_results_public.parquet'
+raw_data <- read_parquet(data_location)
 head(raw_data)
 ```
 
