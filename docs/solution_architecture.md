@@ -333,7 +333,7 @@ erDiagram
         OfficeStackAsyncHaveWorkedWith Character
         AISearchDevHaveWorkedWith Character
         ConvertedCompYearly Double
-        
+    }
 
     OCCUPATIONS ||--o| activities_df : has
     OCCUPATIONS ||--o| alt_titles_df : has
