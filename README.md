@@ -2,9 +2,10 @@
 
 >Create a short document, with the names of group members. You should briefly describe your collaboration tool(s) you’ll use as a group, including for communication, code sharing, and project documentation. You should have identified your data sources, where the data can be found, and how to load it. And you should have created at least a logical model for your normalized database, and produced an Entity-Relationship (ER) diagram documenting your database design.
 
-## Assignment
+## Overview
 
 See [project_assignment.pdf](docs/project_assignment.pdf)
+See our [Ask Issue](https://github.com/kevinhav/DATA607_project_3/issues/1) for the latest project summary
 
 ## Project Team
 
