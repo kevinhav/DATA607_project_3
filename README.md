@@ -5,6 +5,7 @@
 ## Overview
 
 See [project_assignment.pdf](docs/project_assignment.pdf)
+
 See our [Ask Issue](https://github.com/kevinhav/DATA607_project_3/issues/1) for the latest project summary
 
 ## Project Team
