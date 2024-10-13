@@ -25,7 +25,7 @@ for topic in topics:
         tags = []
         for i in range(len(data['about'])):
             tags.append(data['about'][i]['name'])
-        parsed_json_data = [data['name'],data['dateCreated'],data['totalHistoricalEnrollment'],data['description'],tags]
+        parsed_json_data = [topic,data['name'],data['dateCreated'],data['totalHistoricalEnrollment'],data['description'],tags]
         full_data.append(parsed_json_data)
 
     df = pd.DataFrame(full_data)
