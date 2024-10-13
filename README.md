@@ -16,7 +16,7 @@ See [project_assignment.pdf](docs/project_assignment.pdf)
 
 ## Collaboration Tools
 
-We will leverage GitHub and GitHub projects through this project.
+We will leverage GitHub and GitHub Projects through this project to share code, track progress, and coordinate on deliverables.
 
 ### GitHub
 
@@ -24,7 +24,7 @@ We will work out of a shared repository with a common organization (see Repo Dir
 
 ### GitHub Projects
 
-To keep track of our progress, we will create a GitHub project. This project will use a minimal version of the [Data Science Lifecycle Process](https://github.com/dslp/dslp) as a framework.
+To keep track of our progress, we will create a GitHub project. This project will use a lightweight version of the [Data Science Lifecycle Process](https://github.com/dslp/dslp) as a framework.
 
 This framework divides the project into phases; Ask, Data, Exploration, Experimentation, and Modeling. The framework emphasizes documenting the process at each stage, creating an audit trail.
 
@@ -40,29 +40,25 @@ As mentioned above, we will raise GitHub issues as templated documents for each 
 
 ## Data Sources
 
-We have identified three main sources of data for our project
+We have identified three main sources of data for our project;
 
-### Market salaries and job posting descriptions
+### Stackoverflow - Market salaries and job posting descriptions
 
-- Colarado / Washington / Colarado / New York must post salaries
-    - Salary expectations
-    - Use salary as a metric vs the skills listed in the job descriptions
-    - Scraping Indeed.com, Monster, etc.
+Every year Stack Overflow conducts a survey of users of their products. This survey recruits respondents through various outreach channels including blog posts, onsite ads, and social media posts and is considered on of the best sources of information on tech jobs and trends due to the high engagement of tech workers with their products. 
+
+We will use this data to cross reference salaries and skills in specific tech stacks, which we will tie back to data science via O\*NET Occupational Data (see below)
+
 
 ### Trends of self-paced learning resources
 
-- Online courses - what courses are most popular?
-    - Web scraping
-        - LinkedIn Learning
-        - Coursera
-        - Degreed / Udemy
-        - Rate of popularity?
+LinkedIn Learning is a skill development platform that offers online professional development courses. We will use information on course offerings to better understand where people are looking to "upskill" and compare that to skills used by incumbent data scientists using O\*NET data
+
 
 ### O*Net Occupational Data
 
 The O*NET database includes information on skills, abilities, knowledges, work activities, and interests associated with occupations. This information can be used to facilitate career exploration, vocational counseling, and a variety of human resources functions, such as developing job orders and position descriptions and aligning training with current workplace needs. 
 
-We will use the below O*NET data to form the baseline of our research.
+We will use the below O*NET data to form the baseline of our analysis; this data will help us define the occupation of a data scientist and the relevant skills, which we will then enrich with additional data to determine trends, the relative values of skills, and any future projections we'd like to estimate.
 
 - Skills
 - Abilities
@@ -77,7 +73,7 @@ We will use the below O*NET data to form the baseline of our research.
 
 ## Data Dictionary & ER Diagram
 
-See [solution_architecture.md](docs/solution_architecture.md)
+See [solution_architecture.md](https://github.com/kevinhav/DATA607_project_3/blob/main/docs/solution_architecture.md)
 
 ## Directory Structure
 
