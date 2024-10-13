@@ -176,6 +176,19 @@ They are not quantitatively ranked per occupation, but are flagged as "In demand
 
 ## LinkedIn Course Data
 
+LinkedIn Learning is a skill development platform that offers online professional development courses.  Many of these courses fall under data science related topics. These topics include Artificial Intelligence Foundations, Generative AI, Machine Learning, Natural Language Processing nlp, Neural Networks and Deep Learning, Data Analysis, Data Visualization, Business Intelligence, Tech Career Skills, Data Engineering, Database Development, Database Administration, Data Resource Management, and Data Centers.  Summary course data was retrieved via a webscraper, which navigated to the course catalog for each topic and compiled a csv file of links to each course.  Course info was then retrieved and parsed, with the following data collected.
+
+| column name                    | data type 		| column content                                                                                                            |
+| ------------------------------ | -------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Topic                          | Character 		| LinkedIn categorized topic                                                       					    |
+| Course			 | Character 		| Course title                                                            						    |
+| Created			 | Date	     		| Date of course creation in YYYY-MM-DD format						                                    |
+| Viewers		         | Character 		| Historic number of enrollment as of data collection date (2024-10-13)                                                     |
+| Description			 | Character 		| Short course description                									            |
+| Skills			 | Character List	| Character list of skills pertaining to coursework               							    |
+
+The data is located in 14 semicolon delimited csv files, separated by LinkedIn topic.  Data can be loaded using read.csv().  
+
 ## Stackoverflow Job Data
 
 Every year Stack Overflow conducts a survey of users of their products. This survey recruits respondents through various outreach channels including blog posts, onsite ads, and social media posts and is considered on of the best sources of information on tech jobs and trends due to the high engagement of tech workers with their products. The public survey results for all years the survey has been conducted can be found [here](https://survey.stackoverflow.co/).
