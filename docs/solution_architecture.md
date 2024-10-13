@@ -229,7 +229,7 @@ erDiagram
         element_name Character
         scale_id Character
         data_value Float
-        n Integer
+        n Double
         standard_error Float
         lower_ci_bound Float
         upper_ci_bound Float
@@ -257,7 +257,7 @@ erDiagram
         scale_name Character
         category Integer
         data_value Float
-        n Integer
+        n Double
         standard_error Float
         lower_ci_bound Float
         upper_ci_bound Float
@@ -275,7 +275,7 @@ erDiagram
         scale_id Character
         scale_name Character
         data_value Float
-        n Integer
+        n Double
         standard_error Float
         lower_ci_bound Float
         upper_ci_bound Float
@@ -292,7 +292,7 @@ erDiagram
         element_name Character
         scale_id Character
         data_value Float
-        n Integer
+        n Double
         standard_error Float
         lower_ci_bound Float
         upper_ci_bound Float
@@ -306,7 +306,7 @@ erDiagram
     tech_df {
         o_net_soc_code Character
         example Character
-        commodity_code Integer
+        commodity_code Double
         commodity_title Character
         hot_technology Character
         in_demand Character
@@ -320,7 +320,20 @@ erDiagram
         skill Character
         original_date Date
     }
-      
+
+    stackOverflow {
+        LanguageHaveWorkedWith Character
+        DatabaseHaveWorkedWith Character
+        PlatformHaveWorkedWith Character
+        WebframeHaveWorkedWith Character
+        EmbeddedHaveWorkedWith Character
+        MiscTechHaveWorkedWith Character
+        ToolsTechHaveWorkedWith Character
+        NEWCollabToolsHaveWorkedWith Character
+        OfficeStackAsyncHaveWorkedWith Character
+        AISearchDevHaveWorkedWith Character
+        ConvertedCompYearly Double
+        
 
     OCCUPATIONS ||--o| activities_df : has
     OCCUPATIONS ||--o| alt_titles_df : has
@@ -329,4 +342,5 @@ erDiagram
     OCCUPATIONS ||--o| skills_df : has
     OCCUPATIONS ||--o| tech_df : has
     linkedIn_courses ||--o| tech_df: joins_to
+    stackOverflow ||--o| tech_df: joins_to
 ```
