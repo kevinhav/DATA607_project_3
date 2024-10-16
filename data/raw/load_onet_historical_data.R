@@ -1,5 +1,6 @@
 library(tidyverse)
 library(curl)
+library(janitor)
 
 # URLs for each set of ONET data
 url_2024 =  "https://www.onetcenter.org/dl_files/database/db_29_0_text.zip"

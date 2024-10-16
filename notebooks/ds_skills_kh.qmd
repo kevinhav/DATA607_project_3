@@ -1,0 +1,73 @@
+---
+title: "The most important skill to a data scientist is email"
+author: "Havis, Koon, Tillmawitz"
+format: html
+---
+
+```{r}
+library(tidyverse)
+library(treemap)
+```
+
+
+## Introduction
+
+## ONET
+
+The O*NET database includes information on skills, abilities, knowledge, work activities, and interests associated with occupations. This information can be used to facilitate career exploration, vocational counseling, and a variety of human resources functions, such as developing job orders and position descriptions and aligning training with current workplace needs.
+
+```{r}
+# Load all ONET data
+source('../data/raw/load_onet_historical_data.R')
+```
+### Soft skills
+
+For our analysis we have isolated Data Scientists and Statisticians as the primary occupations of interest. Note that Data Scientist is considered a "parent" occupation, and includes the sub-occupations of Business Intelligence Analyst and Clinical Data Managers. O\*NET groups occupations according to how similar it finds their "work activities" to be.
+
+```{r}
+skills <- onet_24$skills
+
+kable(head(skills))
+```
+
+
+
+```{r}
+top_skills <- skills |> 
+  group_by(element_name, scale_id, data_value, .drop = TRUE) |> 
+  summarize(data_value = mean(data_value), .groups = "drop") |> 
+  arrange(desc(data_value)) 
+
+ggplot(top_skills, aes(x = fct_reorder(element_name, data_value, .desc = FALSE), y = data_value, fill = scale_id)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  coord_flip() +
+  theme_minimal()
+```
+
+
+```{r}
+abilities <- onet_24$abilities
+```
+
+
+
+### Technology skills
+
+
+```{r}
+tech_skills <- onet_24$tech
+
+kable(head(tech_skills))
+```
+
+"Hot Technology" indicates that this technology skill is popular among all professions, while "in demand" indicates requirements frequently included in job postings for the particular occupation.
+
+```{r}
+top_tech <- tech_skills |>  
+  filter(in_demand == "Y", soc_name == "data_scientist") |> 
+  select(commodity_title, example, hot_technology, in_demand) |> 
+  arrange(commodity_title) |> 
+  rename("Category" = commodity_title, "Software" = example, "Hot Technology" = hot_technology, "In Demand" = in_demand)
+
+kable(top_tech)
+```
