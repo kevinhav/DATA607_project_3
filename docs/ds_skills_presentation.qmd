@@ -1,0 +1,31 @@
+---
+title: "Data Science Skills"
+author: "Havis, Koon, Tillmawitz"
+format: revealjs
+---
+
+## Introduction
+
+- 
+
+## Top skills of incumbents
+
+::: {.notes}
+Speaker: Kevin
+O\*NET Data
+:::
+
+
+## Most valuable skills
+
+::: {.notes}
+Speaker: Matt
+StackOverflow Data
+:::
+
+## Up-and-coming Skills
+
+::: {.notes}
+Speaker: Kim
+LinkedIn Course Data
+:::

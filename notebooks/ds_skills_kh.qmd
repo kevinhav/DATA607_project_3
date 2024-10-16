@@ -6,7 +6,8 @@ format: html
 
 ```{r}
 library(tidyverse)
-library(treemap)
+library(knitr)
+library(kableExtra)
 ```
 
 
@@ -16,13 +17,21 @@ library(treemap)
 
 The O*NET database includes information on skills, abilities, knowledge, work activities, and interests associated with occupations. This information can be used to facilitate career exploration, vocational counseling, and a variety of human resources functions, such as developing job orders and position descriptions and aligning training with current workplace needs.
 
+For our analysis we have isolated Data Scientists and Statisticians as the primary occupations of interest. Note that Data Scientist is considered a "parent" occupation, and includes the sub-occupations of Business Intelligence Analyst and Clinical Data Managers. O\*NET groups occupations according to how similar it finds their "work activities" to be. We will collectively refer to these occupations as "data scientists" going forward.
+
 ```{r}
 # Load all ONET data
 source('../data/raw/load_onet_historical_data.R')
 ```
-### Soft skills
+### skills
 
-For our analysis we have isolated Data Scientists and Statisticians as the primary occupations of interest. Note that Data Scientist is considered a "parent" occupation, and includes the sub-occupations of Business Intelligence Analyst and Clinical Data Managers. O\*NET groups occupations according to how similar it finds their "work activities" to be.
+The analysts behind O\*NET data measure skills relevancy to an occupation in two ways; *Level* and *Importance.*
+
+*Level* refers to the degree of expertise the job requires. For example, surgery might be a relevant skill for both a nurse and a surgeon, however the surgeon would require a much higher level in the skill.
+
+*Importance* refers to how how many work activities require the use of such a skill. Using another example, Service Orientation would have a very high level of importance to a waiter in a restaurant, but perhaps a low level  required (depending on the restaurant).
+
+Both of these dimensions are rated on a scale of 1 - 5, with one being the lowest and five being the highest.
 
 ```{r}
 skills <- onet_24$skills
@@ -32,27 +41,39 @@ kable(head(skills))
 
 
 
-```{r}
+```{r, fig.width= 6, fig.height = 8}
 top_skills <- skills |> 
   group_by(element_name, scale_id, data_value, .drop = TRUE) |> 
   summarize(data_value = mean(data_value), .groups = "drop") |> 
   arrange(desc(data_value)) 
 
 ggplot(top_skills, aes(x = fct_reorder(element_name, data_value, .desc = FALSE), y = data_value, fill = scale_id)) +
-  geom_bar(stat = "identity", position = "dodge") +
+  geom_bar(stat = "identity", position = "dodge", width = 0.8) +
   coord_flip() +
-  theme_minimal()
+  labs(
+    title = "Top O*NET Skills for Data Scientists",
+    x = "Skill",
+    y = "Rating",
+    fill = c("Level", "Importance")
+  ) +
+  theme_minimal() +
+  scale_fill_discrete(
+    name = "Rating Type",
+    labels = c("LV" = "Level", "IM" = "Importance")
+  ) +
+  scale_y_continuous(breaks = c(1, 2, 3, 4, 5))
 ```
 
+As we can see, the top five skills by both importance and level are Mathematics, Reading Comprehension, Critical Thinking, and Writing. None of these are particularly surprising on their own, but other skills commonly associated with data science are ranked much lower, such as Technology Design, Programming, and Systems Evaluation.
 
-```{r}
-abilities <- onet_24$abilities
-```
-
+In general, we can see that the "soft skills" that are more focused on human interaction are generally more frequently applied and important in data science, including Speaking, Active Listening, and Judgement & Decision Making.
 
 
 ### Technology skills
 
+Technology skills are associated with a given occupation based on requirements seen in relevant job postings. 
+
+"Hot Technology" indicates that this particular skill is popular across occupations, while "in demand" indicates requirements frequently included in job postings for the particular occupation of data scientist.
 
 ```{r}
 tech_skills <- onet_24$tech
@@ -60,14 +81,29 @@ tech_skills <- onet_24$tech
 kable(head(tech_skills))
 ```
 
-"Hot Technology" indicates that this technology skill is popular among all professions, while "in demand" indicates requirements frequently included in job postings for the particular occupation.
+When looking at In Demand skills for data scientist, we can see those that are unique to the profession when Hot Technology is "N". This indicates that experience in this type of software is not commonly required in today's job market, however is highly sought after for data scientists specifically.
 
 ```{r}
-top_tech <- tech_skills |>  
+tech_skills |>  
   filter(in_demand == "Y", soc_name == "data_scientist") |> 
   select(commodity_title, example, hot_technology, in_demand) |> 
   arrange(commodity_title) |> 
-  rename("Category" = commodity_title, "Software" = example, "Hot Technology" = hot_technology, "In Demand" = in_demand)
-
-kable(top_tech)
+  rename("Category" = commodity_title, "Software" = example, "Hot Technology" = hot_technology, "In Demand" = in_demand) |> 
+  kable() |> 
+  kable_styling(bootstrap_options = "hover") |> 
+  row_spec(c(8, 9, 10, 13), background = "lightgreen")
 ```
+
+Some notable examples include popular Python libraries such as Numpy, Pandas, PyTorch, and Scikit-Learn. 
+
+The usual suspects, which are more universally sought across occupations, include SQL, AWS, and Git.
+
+We will see more of how technology skills relate to a given occupation, especially quantitatively, in the following section.
+
+### Additional Data
+
+O\*NET contains a vast store of interesting data related to many other occupations, and we strongly encourage others to explore if for nothing else than to satisfy your curiousity.
+
+[About O\*NET](https://www.onetcenter.org/overview.html) - Read more on how O*NET Data is captured and analyzed
+[O\*NET Resource Center](https://www.onetcenter.org/) - Additional data, taxonomies, and methodologies
+[O\*NET Interest Profiler](https://www.onetcenter.org/IP.html#web-based) - Survey tool to profile your interests and align to different occupations
