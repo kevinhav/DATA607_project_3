@@ -51,15 +51,20 @@ ggplot(top_skills, aes(x = fct_reorder(element_name, data_value, .desc = FALSE),
   geom_bar(stat = "identity", position = "dodge", width = 0.8) +
   coord_flip() +
   labs(
-    title = "Top O*NET Skills for Data Scientists",
+    title = "Top Skills for Data Scientists",
     x = "Skill",
     y = "Rating",
-    fill = c("Level", "Importance")
+    fill = c("Level", "Importance"),
+    caption = "Based on 2024 O*NET Data"
   ) +
   theme_minimal() +
-  scale_fill_discrete(
+  theme(plot.caption = element_text(hjust = 0, face = "italic"),
+        plot.title.position = "plot",
+        plot.caption.position = "plot") +
+  scale_fill_manual(
     name = "Rating Type",
-    labels = c("LV" = "Level", "IM" = "Importance")
+    labels = c("LV" = "Level", "IM" = "Importance"),
+    values = c("LV" = "#E76F51", IM = "#F4A261")
   ) +
   scale_y_continuous(breaks = c(1, 2, 3, 4, 5))
 ```
@@ -91,7 +96,7 @@ tech_skills |>
   rename("Category" = commodity_title, "Software" = example, "Hot Technology" = hot_technology, "In Demand" = in_demand) |> 
   kable() |> 
   kable_styling(bootstrap_options = "hover") |> 
-  row_spec(c(8, 9, 10, 13), background = "lightgreen")
+  row_spec(c(8, 9, 10, 13), background = "#F4A261")
 ```
 
 Some notable examples include popular Python libraries such as Numpy, Pandas, PyTorch, and Scikit-Learn. 

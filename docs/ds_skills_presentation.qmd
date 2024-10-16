@@ -1,22 +1,47 @@
 ---
 title: "Data Science Skills"
 author: "Havis, Koon, Tillmawitz"
-format: revealjs
+format:
+  revealjs:
+    theme: moon
 ---
 
 ## Introduction
 
+::: {.notes}
+Speaker: Kevin
+Introduce the team, the project
+Summarize our approach to skills
+:::
+
+- Skills are loosely defined as expertise or capability that can be refined
+  - Includes "soft skills" and "technical skills"
+- How to measure?
+  - by relevance
+  - by market value
+  - by growth
 - 
 
 ## Top skills of incumbents
 
 ::: {.notes}
 Speaker: Kevin
-O\*NET Data
+Introduce O\*NET Data
+Introduce level & importance
+Review top skills
+Highlight less important skills that are thought of as common
 :::
 
 
+![](ds_skills_presentation_files/images/onet_skills.png)
+
+## Technical Skills
+
+- List
+
 ## Most valuable skills
+
+![](ds_skills_presentation_files/images/onet_tech_skills.png)
 
 ::: {.notes}
 Speaker: Matt
