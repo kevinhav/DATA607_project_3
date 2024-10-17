@@ -26,22 +26,33 @@ Summarize our approach to skills
 
 ::: {.notes}
 Speaker: Kevin
-Introduce O\*NET Data
-Introduce level & importance
-Review top skills
-Highlight less important skills that are thought of as common
 :::
 
+:::: {.columns}
 
+::: {.column width="60%"}
 ![](ds_skills_presentation_files/images/onet_skills.png)
+:::
+
+::: {.column width="40%"}
+- Top five skills are expected
+- Programming, technology design, systems evaluation less important?
+- Soft skills
+:::
+
+::::
+
+
 
 ## Technical Skills
 
-- List
-
-## Most valuable skills
+::: {.notes}
+Speaker: Kevin
+:::
 
 ![](ds_skills_presentation_files/images/onet_tech_skills.png)
+
+## Most valuable skills 
 
 ::: {.notes}
 Speaker: Matt

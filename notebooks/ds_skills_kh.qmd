@@ -41,7 +41,7 @@ kable(head(skills))
 
 
 
-```{r, fig.width= 6, fig.height = 8}
+```{r, fig.width= 6, fig.height = 6}
 top_skills <- skills |> 
   group_by(element_name, scale_id, data_value, .drop = TRUE) |> 
   summarize(data_value = mean(data_value), .groups = "drop") |> 
@@ -96,7 +96,7 @@ tech_skills |>
   rename("Category" = commodity_title, "Software" = example, "Hot Technology" = hot_technology, "In Demand" = in_demand) |> 
   kable() |> 
   kable_styling(bootstrap_options = "hover") |> 
-  row_spec(c(8, 9, 10, 13), background = "#F4A261")
+  row_spec(c(8, 9, 10, 13, 15), background = "#F4A261")
 ```
 
 Some notable examples include popular Python libraries such as Numpy, Pandas, PyTorch, and Scikit-Learn. 
