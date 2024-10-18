@@ -23,6 +23,8 @@ For our analysis we have isolated Data Scientists and Statisticians as the prima
 # Load all ONET data
 source('../data/raw/load_onet_historical_data.R')
 ```
+
+
 ### skills
 
 The analysts behind O\*NET data measure skills relevancy to an occupation in two ways; *Level* and *Importance.*
@@ -43,11 +45,17 @@ kable(head(skills))
 
 ```{r, fig.width= 6, fig.height = 6}
 top_skills <- skills |> 
-  group_by(element_name, scale_id, data_value, .drop = TRUE) |> 
-  summarize(data_value = mean(data_value), .groups = "drop") |> 
-  arrange(desc(data_value)) 
+  group_by(element_name) |> 
+  summarize(max_value = max(data_value), .groups = "drop") |> 
+  arrange(desc(max_value)) |> 
+  slice_head(n=15) |> 
+  pull(element_name)
 
-ggplot(top_skills, aes(x = fct_reorder(element_name, data_value, .desc = FALSE), y = data_value, fill = scale_id)) +
+skills |> 
+  filter(element_name %in% top_skills) |> 
+  arrange(desc(data_value), element_name, scale_id) |> 
+
+ggplot(aes(x = fct_reorder(element_name, data_value, .fun = max, .desc = FALSE), y = data_value, fill = scale_id)) +
   geom_bar(stat = "identity", position = "dodge", width = 0.8) +
   coord_flip() +
   labs(
@@ -64,7 +72,7 @@ ggplot(top_skills, aes(x = fct_reorder(element_name, data_value, .desc = FALSE),
   scale_fill_manual(
     name = "Rating Type",
     labels = c("LV" = "Level", "IM" = "Importance"),
-    values = c("LV" = "#E76F51", IM = "#F4A261")
+    values = c("LV" = "#203D46", "IM" = "#B83F21")
   ) +
   scale_y_continuous(breaks = c(1, 2, 3, 4, 5))
 ```
@@ -73,6 +81,57 @@ As we can see, the top five skills by both importance and level are Mathematics,
 
 In general, we can see that the "soft skills" that are more focused on human interaction are generally more frequently applied and important in data science, including Speaking, Active Listening, and Judgement & Decision Making.
 
+### Abilities
+
+Abilities differ from skills in that they refer more to an individual's enduring attributes, and are less likely to be actively developed. You could think of abilities in this context as a person's natural proclivities.
+
+similar to skills, abilities are rated again by Level and Importance.
+
+```{r}
+abilities <- onet_24$abilities
+
+kable(head(abilities))
+```
+
+```{r, echo = FALSE, fig.width= 6, fig.height = 6}
+# Create vector of top abilities
+top_abilities <- abilities |> 
+  group_by(element_name) |> 
+  summarize(max_value = max(data_value), .groups = "drop") |> 
+  arrange(desc(max_value)) |> 
+  slice_head(n=15) |> 
+  pull(element_name)
+
+# Filter dataframe for top abilities
+abilities |> 
+  filter(element_name %in% top_abilities) |> 
+  arrange(desc(data_value), element_name, scale_id) |> 
+# Visualize
+ggplot(aes(x = fct_reorder(element_name, data_value, .fun = max, .desc = FALSE), y = data_value, fill = scale_id)) +
+  geom_bar(stat = "identity", position = "dodge", width = 0.8) +
+  coord_flip() +
+  labs(
+    title = "Top Abilities for Data Scientists",
+    x = "Ability",
+    y = "Rating",
+    fill = c("Level", "Importance"),
+    caption = "Based on 2024 O*NET Data"
+  ) +
+  theme_minimal() +
+  theme(plot.caption = element_text(hjust = 0, face = "italic"),
+        plot.title.position = "plot",
+        plot.caption.position = "plot") +
+  scale_fill_manual(
+    name = "Rating Type",
+    labels = c("LV" = "Level", "IM" = "Importance"),
+    values = c("LV" = "#203D46", "IM" = "#B83F21")
+  ) +
+  scale_y_continuous(breaks = c(1, 2, 3, 4, 5))
+```
+
+Following closely the trend we observed in the Skills data, we can see that handiness with numbers, as well as strong capacity to communicate with others, are both important and require a high degree of expertise for an aspiring data scientist.
+
+Despite these similarities, we liked the abilities view as it more finely demonstrated the importance of "soft skills", primarily those that focused on communication. We continue to see reinforcement for data scientists to invest in their writing and presentation skills!
 
 ### Technology skills
 
@@ -96,7 +155,7 @@ tech_skills |>
   rename("Category" = commodity_title, "Software" = example, "Hot Technology" = hot_technology, "In Demand" = in_demand) |> 
   kable() |> 
   kable_styling(bootstrap_options = "hover") |> 
-  row_spec(c(8, 9, 10, 13, 15), background = "#F4A261")
+  row_spec(c(8, 9, 10, 13, 15), background = "#B83F21")
 ```
 
 Some notable examples include popular Python libraries such as Numpy, Pandas, PyTorch, and Scikit-Learn. 
@@ -105,10 +164,19 @@ The usual suspects, which are more universally sought across occupations, includ
 
 We will see more of how technology skills relate to a given occupation, especially quantitatively, in the following section.
 
-### Additional Data
 
-O\*NET contains a vast store of interesting data related to many other occupations, and we strongly encourage others to explore if for nothing else than to satisfy your curiousity.
+### Additional Information
+
+O\*NET contains a vast store of interesting data related to many other occupations, and we strongly encourage others to explore if for nothing else than to satisfy your curiosity.
 
 [About O\*NET](https://www.onetcenter.org/overview.html) - Read more on how O*NET Data is captured and analyzed
 [O\*NET Resource Center](https://www.onetcenter.org/) - Additional data, taxonomies, and methodologies
 [O\*NET Interest Profiler](https://www.onetcenter.org/IP.html#web-based) - Survey tool to profile your interests and align to different occupations
+
+## What skills are most valuable?
+
+
+
+## What skills are people training in?
+
+

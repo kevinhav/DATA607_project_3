@@ -20,7 +20,6 @@ Summarize our approach to skills
   - by relevance
   - by market value
   - by growth
-- 
 
 ## Top skills of incumbents
 
@@ -36,8 +35,32 @@ Speaker: Kevin
 
 ::: {.column width="40%"}
 - Top five skills are expected
+
 - Programming, technology design, systems evaluation less important?
+
 - Soft skills
+:::
+
+::::
+
+## Abilities of incumbents
+
+::: {.notes}
+Speaker: Kevin
+:::
+
+:::: {.columns}
+
+::: {.column width="60%"}
+![](ds_skills_presentation_files/images/onet_abilities.png)
+:::
+
+::: {.column width="40%"}
+- Similar themes to skills
+
+- Mathematical capacity 
+
+- Write, read, listen, and speak
 :::
 
 ::::
@@ -65,3 +88,5 @@ StackOverflow Data
 Speaker: Kim
 LinkedIn Course Data
 :::
+
+## Conclusion
