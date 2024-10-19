@@ -188,8 +188,8 @@ To obtain this data, we used Python, Beautiful Soup, and Selenium to scrape the 
 
 ```{r}
 # Load all LinkedInLearning Data
-LL_Data_Science <- read.csv("C:\\Users\\Kim\\Documents\\GitHub\\DATA607_project_3\\data\\raw\\Data-Science_Data.csv", header = TRUE, sep = ";")
-LL_Artificial_Intelligence <- read.csv("C:\\Users\\Kim\\Documents\\GitHub\\DATA607_project_3\\data\\raw\\Artificial-Intelligence_Data.csv", header = TRUE, sep = ";")
+LL_Data_Science <- read.csv("..\\data\\raw\\Data-Science_Data.csv", header = TRUE, sep = ";")
+LL_Artificial_Intelligence <- read.csv("..\\data\\raw\\Artificial-Intelligence_Data.csv", header = TRUE, sep = ";")
 full_LL_dataset <- rbind(LL_Data_Science,LL_Artificial_Intelligence) 
 ```
 
