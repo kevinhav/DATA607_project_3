@@ -8,6 +8,7 @@ format: html
 library(tidyverse)
 library(knitr)
 library(kableExtra)
+library(scales)
 ```
 
 
@@ -31,7 +32,7 @@ The analysts behind O\*NET data measure skills relevancy to an occupation in two
 
 *Level* refers to the degree of expertise the job requires. For example, surgery might be a relevant skill for both a nurse and a surgeon, however the surgeon would require a much higher level in the skill.
 
-*Importance* refers to how how many work activities require the use of such a skill. Using another example, Service Orientation would have a very high level of importance to a waiter in a restaurant, but perhaps a low level  required (depending on the restaurant).
+*Importance* refers to how many work activities require the use of such a skill. Using another example, Service Orientation would have a very high level of importance to a waiter in a restaurant, but perhaps a low level required (depending on the restaurant).
 
 Both of these dimensions are rated on a scale of 1 - 5, with one being the lowest and five being the highest.
 
@@ -175,6 +176,120 @@ O\*NET contains a vast store of interesting data related to many other occupatio
 
 ## What skills are most valuable?
 
+Nailing down the value of a skill can be difficult, as value can be defined any number of ways. Additionally, soft skills are simply hard to measure. When has one attained mastery of written expression or speaking? The thresholds and measures of such skills are subjective and therefore difficult to track. Technical skills, however, are a bit easier to measure. While defining mastery of a technical skill is still nebulous, a common practice across the tech industry is to conduct a technical interview which evaluates a candidate's skills with the technologies the role requires. We can therefore conclude that if an individual uses a technology in their role they have a baseline competency that meets the standards of the industry. Having set a threshold for skill competency, we still need to determine how to value the skill. The O\*NET data has given us the relative value of these skills, but we can attach a more absolute value to a skill by tracking the average salary of individuals with said skill.
+
+### The Stack Overflow Developer Survey
+
+Every year Stack Overflow conducts a voluntary survey of its users. While not strictly a representative sample of the industry it is the closest thing to one that is publicly available due to the reliance of tech workers on the Stack Overflow forums. The survey is considered one of the best resources for tracking tech trends and conveniently also tracks the role and salary of respondents as well as numerous other indicators. For our purposes we will be looking at the skills and tools used by data scientists in their current role.
+
+### Tidying the Data
+
+The survey covers all kinds of developers, of which data scientists make a relatively small proportion of the sample. While there is a "Data scientist or machine learning specialist" category, we are expanding our sample to include roles that have significant overlap in skills and duties which can be filled by individuals who may otherwise be considered data scientists. The developer types we will look at are "Data engineer", "Data scientist or machine learning specialist", "Data or business analyst", and "Developer, AI". Normally we would want to address missing values for skills, but in this case the value of a skill is defined as much by who has it as who does not as those with specialized knowledge can demand a higher salary. For our purposes we will consider any skill that fewer than 10% of our sample population have as too niche to be considered.
+
+```{r transform the data into format for analysis, results = FALSE, message=FALSE}
+#| code-fold: true
+# Change this as needed, absolute path works better than relative for me
+file_path <- "/Users/matttillman/School/DATA607_project_3/data/processed/stack_overflow_jobs.csv"
+so_data <- read_csv(file_path) |>
+  select(!c("OfficeStackSyncHaveWorkedWith", "OfficeStackAsyncHaveWorkedWith"))
+total_devs <- nrow(so_data)
+
+# Need to hide this
+cutoff <- 0.1 * total_devs
+
+grouped_skills <- so_data |>
+  rowid_to_column("id") |>
+  mutate(across(!c(id, DevType, ConvertedCompYearly), ~ gsub(';', paste0("_", cur_column(), ";"), .))) |>
+  mutate(across(!c(id, DevType, ConvertedCompYearly), ~ if_else(!is.na(.), paste0(., "_", cur_column()), .)))
+
+skills_chart <- grouped_skills |>
+  unite("skills", LanguageHaveWorkedWith:AISearchDevHaveWorkedWith, sep = ";", na.rm = TRUE) |>
+  separate_longer_delim(skills, delim = ";") |>
+  mutate(present = 1) |>
+  filter(skills != "") |>
+  distinct() |> 
+  pivot_wider(id_cols = c(id, DevType, ConvertedCompYearly), names_from = skills, values_from = present, values_fill = 0) 
+
+skill_population <- skills_chart |>
+  summarise(across(!c(id, DevType, ConvertedCompYearly), ~ sum(.))) |>
+  pivot_longer(everything(), names_to = "skill", values_to = "count") |>
+  separate_wider_delim(skill, delim = "_", names = c("skill", "skill_group"))
+
+skills_above_cutoff <- skill_population |>
+  filter(count > cutoff)
+
+smash_skills <- skills_above_cutoff |>
+  unite("skill", c(skill,skill_group), sep = "_")
+
+relevant_skills_chart <- skills_chart |>
+  select(c(id, DevType, ConvertedCompYearly) | smash_skills$skill)
+
+all_relevant_skills_rank <- relevant_skills_chart |>
+  pivot_longer(!c("id", "DevType", "ConvertedCompYearly"), names_to = "skill", values_to = "has_skill") |>
+  filter(has_skill > 0) |>
+  group_by(skill) |>
+  summarise(avg_comp = mean(ConvertedCompYearly)) |>
+  separate_wider_delim(skill, delim = "_", names = c("skill", "skill_group")) |>
+  arrange(desc(avg_comp)) |>
+  filter(skill_group != "NEWCollabToolsHaveWorkedWith") |>
+  mutate(skill_group = str_replace(skill_group, "HaveWorkedWith", ""))
+```
+
+When we look at the top skills by average salary we can see some interesting patterns. In terms of "skill groups" there does not appear to be a single kind of skill that is more valuable than others. Having a diverse scope of knowledge across the surveyed technology types appears to lead to higher salaries, as every skill group has at least one technology in the top third of average salaries. In the bottom third of the plot we can find technologies like MongoDB or MySQL which have largely been supplanted by newer or more performant technologies. The middle third of the chart is populated by what we can consider to be the expected standard skills, technologies which do not differentiate a candidate but are also not correlated with lower paying jobs. Technologies like R, Pandas, Python, Docker, and PostgreSQL fall into this category. There is a clear jump in the value of skills with an average salary over $100,000 indicating these skills are differentiators in the industry. Familiarity with tools such as Kafka, Spark, Databricks, Terraform, AWS, and Snowflake as well as the associated skills of interpreting and manipulating data in real time at scale are clearly a big selling point for employers. Interestingly we see an AI tool topping the list in Claude, and another in Github Copilot near the top. This seems to indicate that familiarity with AI tools can be a differentiator, although the lack of other AI tools making the cutoff for relevant skills means the specific tool matters. It will be interesting to see whether the AI tools remain relevant or if they get supplanted in time.
+
+```{r plotting skills, fig.height=10, fig.width=10}
+#| code-fold: true
+all_relevant_skills_rank |>
+  arrange(desc(avg_comp)) |>
+  ggplot(aes(x = avg_comp, y = fct_reorder(skill, avg_comp), fill = skill_group)) +
+  geom_col() +
+  theme(legend.position = "bottom",
+        axis.title = element_text(size = 15),
+        legend.title = element_text(size = 15),
+        title = element_text(size = 20)) +
+  scale_x_continuous(labels = label_comma()) +
+  labs(title = "Technical Skills by Value", x = "Average Salary (USD)", y = "Technology Used", fill = "Skill Group")
+```
+
+Tieing our analysis back into the O\*NET data we can use the tech skills explicitly identified as reference points to expand our understanding of the relative value of skills not included in the O\*NET data. It should be noted that GIT, SAS, Hadoop, and Excel do not appear in the data we pulled from the Stack Overflow Survey. Hadoop is an outdated technology that has been supplanted by Spark, so we can safely disregard it. GIT is a surprising omission from this dataset and given its prevalence as a development tool it likely appears in one of the categories that was not pulled. The same can be said of SAS and Excel, which are the only remaining omissions. Several of the technologies listed in the O\*NET technical skills are families of technologies, most notably SQL and NoSQL so in those cases technologies which are part of those families are colored the same.
+
+```{r plotting skills highlighted, fig.height=10, fig.width=10}
+#| code-fold: true
+tech_colors <- c(
+  "R" = "#8AB17D", 
+  "Python" = "#4A7A8C", 
+  "Git" = "#E7B16C", 
+  "Amazon Web Services (AWS)" = "#D9421C", 
+  "Redis" = "#E9C46A", 
+  "Elasticsearch" = "#E9C46A", 
+  "MongoDB" = "#E9C46A",
+  "SAS" = "#BABB74", 
+  "Apache Spark" = "#F4A261", 
+  "Hadoop" = "#E76F51", 
+  "Excel" = "#264653", 
+  "Databricks SQL" = "#2A9D8F", 
+  "PostgreSQL" = "#2A9D8F", 
+  "SQL" = "#2A9D8F", 
+  "Microsoft SQL Server" = "#2A9D8F", 
+  "SQLite" = "#2A9D8F", 
+  "MySQL" = "#2A9D8F",
+  "Pandas" = "#47856A", 
+  "Scikit-Learn" = "#864653", 
+  "TensorFlow" = "#99756F"
+) 
+
+all_relevant_skills_rank |>
+  arrange(desc(avg_comp)) |>
+  ggplot(aes(x = avg_comp, y = fct_reorder(skill, avg_comp), fill = skill)) +
+  geom_col() +
+  theme(legend.position = "bottom",
+        axis.title = element_text(size = 15),
+        legend.title = element_text(size = 15),
+        title = element_text(size = 20)) +
+  scale_x_continuous(labels = label_comma()) +
+  labs(title = "Technical Skills by Value", x = "Average Salary (USD)", y = "Technology Used", fill = "Skill Group") +
+  scale_fill_manual(values = tech_colors)
+```
 
 
 ## What skills are people training in?
