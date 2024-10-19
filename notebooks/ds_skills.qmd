@@ -8,6 +8,7 @@ format: html
 library(tidyverse)
 library(knitr)
 library(kableExtra)
+library(zoo)
 ```
 
 
@@ -179,4 +180,146 @@ O\*NET contains a vast store of interesting data related to many other occupatio
 
 ## What skills are people training in?
 
+Linkedin Learning is a skill development platform launched in 2016.  It provides eLearning resources that focus on four main categories, Business, Technology, Creative, and Certifications.  For this analysis, data was pulled from the Data Science and Artificial Intelligence topics in the Technology category.  
 
+# Data Acquisition
+
+To obtain this data, we used Python, Beautiful Soup, and Selenium to scrape the LinkedInLearning catalog for links to the main course pages.  With the list of links, we then automated navigation to each main course page and scraped the overarching course topic, course title, description, published date, to-date enrollment, and skill tags.  
+
+```{r}
+# Load all LinkedInLearning Data
+LL_Data_Science <- read.csv("C:\\Users\\Kim\\Documents\\GitHub\\DATA607_project_3\\data\\raw\\Data-Science_Data.csv", header = TRUE, sep = ";")
+LL_Artificial_Intelligence <- read.csv("C:\\Users\\Kim\\Documents\\GitHub\\DATA607_project_3\\data\\raw\\Artificial-Intelligence_Data.csv", header = TRUE, sep = ";")
+full_LL_dataset <- rbind(LL_Data_Science,LL_Artificial_Intelligence) 
+```
+
+# Data Cleaning
+
+The raw dataset contained skill tags as a list in the last column.  These skills were separated and converted to their own individual record.  Since Viewership is dependent on Published Date, the data was standardized by including the column Active Days which denote how many days the course has been active, based on the date of data acquisition and the date of course publication.  YearMonth, which takes the year and month of course publication, was also included into the full dataset in the data cleaning process. 
+
+```{r}
+full_LL_dataset <- full_LL_dataset %>% rename(Topic = X0, Title = X1, Published = X2, Enrollment = X3, Description = X4, Skills = X5)
+full_LL_dataset$Skills <- substr(full_LL_dataset$Skills, 2, nchar(full_LL_dataset$Skills) - 1)
+full_LL_dataset <- separate_rows(full_LL_dataset, Skills, sep = ",")
+full_LL_dataset$Skills <- gsub("^'|'$", "", trimws(full_LL_dataset$Skills))
+
+full_LL_dataset <- full_LL_dataset %>% 
+  mutate(Published = as.Date(Published)) %>% 
+  mutate(active_days = as.numeric(as.Date("2024-10-16")-Published)) %>% 
+  mutate(YearMonth = as.yearmon(Published))
+
+```
+# Technology Skills
+
+For consistency, the skills centered in this analysis follow the shortlist from the previous sections.  
+
+```{r}
+full_LL_dataset_onet_mapped <- full_LL_dataset %>% distinct(Title, Published, Skills, .keep_all = TRUE) %>%   
+  mutate(skills_onet = case_when( # rename the skills as named in LinkedInLearning to match onet data
+    Skills == "R (Programming Language)"      ~ "R",
+    Skills == "Python (Programming Language)" ~ "Python",
+    Skills == "GitHub"   ~ "Git",
+    Skills == "Amazon Web Services (AWS)"    ~ "AWS",
+    Skills == "Apache Spark"    ~ "Spark",
+    Skills == "Excel Dashboards"      ~ "Excel",
+    Skills == "Excel Modeling"      ~ "Excel",
+    Skills == "Microsoft Excel"      ~ "Excel",
+    Skills == "Pandas (Software)" ~ "Pandas",
+    Skills == "Scikit-Learn"   ~ "Scikit-learn",
+    Skills == "SAS (Programming Language)"   ~ "SAS",
+    Skills == "SQL"    ~ "SQL",
+    Skills == "Hadoop"    ~ "Hadoop",
+    Skills == "NoSQL"    ~ "NoSQL",
+    Skills == "TensorFlow"    ~ "TensorFlow"
+  )) %>% na.omit() # remove all data that does not fall within these categories
+
+
+tech_colors <- c(
+  "R" = "#8AB17D", 
+  "Python" = "#4A7A8C", 
+  "Git" = "#E7B16C", 
+  "AWS" = "#D9421C", 
+  "NoSQL" = "#E9C46A", 
+  "SAS" = "#BABB74", 
+  "Spark" = "#F4A261", 
+  "Hadoop" = "#E76F51", 
+  "Excel" = "#264653", 
+  "SQL" = "#2A9D8F", 
+  "pandas" = "#47856A", 
+  "Scikit-learn" = "#864653", 
+  "TensorFlow" = "#99756F"
+) 
+
+```
+
+For the base analysis, we can look at total viewership by Technology Skill.  We can see the top four skills are Excel, SQL, Python, and R, with Excel leading by a significant margin.  The top four skills appear to have significantly higher enrollment than the other top skills identified by the O*NET data.    
+
+```{r}
+Skill_Enrollment_onet_mapped <- full_LL_dataset_onet_mapped %>% group_by(skills_onet) %>% summarize(avg_total_daily_enrollment = sum(Enrollment)/sum(active_days), total_enrollment = sum(Enrollment)) 
+
+Skill_Enrollment_onet_mapped %>% 
+  ggplot(aes(x = total_enrollment, y = reorder(skills_onet,total_enrollment), fill = skills_onet)) + geom_bar(stat= "identity") +
+    scale_fill_manual(
+    values = tech_colors
+  ) +
+  guides(fill = "none") + 
+  theme_minimal() + 
+  scale_x_continuous(labels = function(total_enrollment) format(total_enrollment, scientific = FALSE)) + 
+  labs(title = "Total Enrollment by Technology Skill", y = "Technology Skill", x = "Enrollment")
+```
+Using the number of active days per course, we can standardized the data by taking total enrollment per course and divide by total active days.  This accounts for newer courses that may have lower total viewership but high daily enrollment with respect to when the course was published. When looking at average daily enrollment, we can see that Excel again far surpasses the other technology skills.  However, the gap between all other technology skills is closed significantly.  Using this method, we can see that the top five technology skills are Excel, SQL, Python, SAS, and R.  
+
+```{r}
+Skill_Enrollment_onet_mapped %>% 
+  ggplot(aes(x = avg_total_daily_enrollment, y = reorder(skills_onet,avg_total_daily_enrollment), fill = skills_onet)) + geom_bar(stat= "identity") +
+    scale_fill_manual(
+    values = tech_colors
+  ) +
+  guides(fill = "none") + 
+  theme_minimal() + 
+  labs(title = "Average Daily Enrollment by Technology Skill", y = "Technology Skill", x = "Average Daily Enrollment")
+```
+These results, specifically the lessened gap between each skill, can be explained by the fewer number of available courses or more recent publication dates.  Both of these variables will affect the number of Active Days, which was used in the standardization of data.  Taking a look at number of courses per technology skill, we can see that this is true for skills like SAS and Scikit-learn, which only had one course each resulting in a high average daily enrollment.
+
+```{r}
+Skill_Count_onet_mapped <- full_LL_dataset_onet_mapped %>% group_by(skills_onet) %>% summarize(count = n())
+
+Skill_Count_onet_mapped %>% 
+  ggplot(aes(x = count, y = reorder(skills_onet,count), fill = skills_onet)) + geom_bar(stat= "identity") +
+  scale_fill_manual(
+    values = tech_colors
+  ) +
+    guides(fill = "none") + 
+  theme_minimal() +
+  labs(title = "Number of Courses by Technology Skill", y = "Technology Skill", x = "Courses")
+```
+
+We can also look at the count of courses graphed against the total enrollment, where we would expect total enrollment to increase as course quantity increases.  If each technology were equally in demand for Linkedin Learners, we would expect the data to exhibit a linear trend.  We can see a clear outlier with Excel, having a high count but a much higher total enrollment that does not appear to follow the pattern of the data.  SQL also appears to be a potential outlier, though not as pronounced.  
+
+```{r}
+Skill_joined_count_avg_enroll <- inner_join(Skill_Count_onet_mapped,Skill_Enrollment_onet_mapped, by = "skills_onet")
+
+Skill_joined_count_avg_enroll %>% 
+  ggplot(aes(x = count, y = total_enrollment, color = skills_onet)) + geom_point(size = 2) +
+  scale_color_manual(
+    name = "Technology",
+    values = tech_colors
+  ) +
+  guides(fill = "none") + 
+  theme_minimal() +
+  scale_y_continuous(labels = function(total_enrollment) format(total_enrollment, scientific = FALSE)) +
+  labs(title = "Total Course Enrollment vs Available Courses", y = "Total Enrollment", x = "Number of Courses")
+```
+Finally, we can look at the evolution of demand in upskilling for each technology over time by determining what technology skills eLearnings are released on the platform over time. From this data, we can see that there are four technology skills, Python, SQL, Excel, and R which appear to have a catalog that is growing at a faster rate than the other skills.  
+
+```{r}
+Skill_Binned_onet_mapped <- full_LL_dataset_onet_mapped %>% group_by(YearMonth,skills_onet) %>% summarize(count = n(), .groups = 'drop') %>% group_by(skills_onet) %>% mutate(ccount = cumsum(count)) 
+
+Skill_Binned_onet_mapped %>% ggplot(aes(x = YearMonth, y = ccount, color = skills_onet)) + geom_point(size = 2) + geom_line() +
+    scale_color_manual(
+      name = "Technology",
+    values = tech_colors) +  
+  labs(title = "Course Addition over Time", y = "Total Number of Courses", x = "Publication Date")
+
+```
+With the above results, it is important to consider the universal use of each of these skills. While Excel is present in many of the courses cataloged for "Data Science" and "Artificial Intelligence", it is also considered a basic software skill used in many other professions.  This might cause skewed numbers in favor of higher enrollment in Excel courses.  
