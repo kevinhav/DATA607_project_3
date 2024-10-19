@@ -89,4 +89,47 @@ Speaker: Kim
 LinkedIn Course Data
 :::
 
+![](ds_skills_presentation_files/images/LinkedInLearning.png)
+
+## Total Enrollment by Tech Skill
+
+![](ds_skills_presentation_files/images/LinkedIn_Total_Enrollment_bar.png)
+
+## Average Total Daily Enrollment
+
+![](ds_skills_presentation_files/images/LinkedIn_Avg_Total_Enrollment_bar.png)
+
+## Total Course Count
+
+::: {#course-count .columns}
+::: {.column width="50%"}
+![](ds_skills_presentation_files/images/LinkedIn_Course_Count_bar.png)
+:::
+::: {.column width="50%"}
+![](ds_skills_presentation_files/images/LinkedIn_Total_Enrollment_Count_scatter.png)
+:::
+:::
+
+## Courses over Time
+
+:::: {.columns}
+
+::: {.column width="60%"}
+![](ds_skills_presentation_files/images/LinkedIn_Count_over_Time.png)
+:::
+
+::: {.column width="40%"}
+Top growing catalogs:
+
+- Python
+- SQL
+- Excel
+- R
+:::
+
+::::
+
+
+
+
 ## Conclusion
