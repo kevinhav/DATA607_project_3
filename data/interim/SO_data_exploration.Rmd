@@ -1,0 +1,192 @@
+---
+title: "Stack Overflow Analysis"
+author: "Matthew Tillmawitz"
+date: "2024-10-17"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+library(tidyverse)
+```
+
+## High level look
+
+read data, have some high level stats
+
+```{r read data}
+# Change this as needed, absolute path works better than relative for me
+file_path <- "/Users/matttillman/School/DATA607_project_3/data/processed/stack_overflow_jobs.csv"
+so_data <- read_csv(file_path)
+colnames(so_data)
+head(so_data)
+total_devs <- nrow(so_data)
+```
+
+Proportion of each job family
+
+```{r proportion of job type}
+job_props <- so_data |>
+  group_by(DevType) |>
+  summarise(n = n()) |>
+  mutate(prop = n / sum(n))
+
+job_props |> arrange(desc(prop))
+```
+
+## Check missing data
+
+Looking at missing skill families, this is the proportion of individuals who reported no skills in the respective family. Could be useful to cross with Kim's data in some way.
+
+```{r checking missing data}
+missing_data <- so_data |>
+  summarise(across(LanguageHaveWorkedWith:AISearchDevHaveWorkedWith, ~ sum(is.na(.)) / n())) |>
+  pivot_longer(everything(), names_to = "skill_set", values_to = "prop_blank")
+
+missing_data |>
+  ggplot(aes(x = prop_blank, y = skill_set)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Proportion Empty", y = "Skill Set", fill = "Dev Type", title = "Proportion of Missing Values by Dev Type")
+```
+
+Breaking the above down by job family, we can see the analyst family has the most empty families of every job group. This corresponds to their lower average salary below.
+
+```{r checking missing data}
+missing_rate_by_job <- so_data |>
+  group_by(DevType) |>
+  summarise_each(funs(sum(is.na(.))/length(.))) |>
+  select(!ConvertedCompYearly)
+
+missing_rate_by_job |>
+  pivot_longer(!DevType, names_to = "skill_set", values_to = "prop_blank") |>
+  ggplot(aes(x = prop_blank, y = skill_set, fill = DevType)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "Proportion Empty", y = "Skill Set", fill = "Dev Type", title = "Proportion of Missing Values by Dev Type")
+
+```
+
+## Job family salary
+
+```{r checking missing data}
+so_data |>
+  group_by(DevType) |>
+  summarise(avg_salary = mean(ConvertedCompYearly)) |>
+  arrange(desc(avg_salary))
+```
+
+
+Appending the column name to each element of the skill string so we can do subgroups later. We do two mutates, one to handle all the values split by a ";" and one to handle the last or single values.
+
+```{r add_column_name}
+grouped_skills <- so_data |>
+  rowid_to_column("id") |>
+  mutate(across(!c(id, DevType, ConvertedCompYearly), ~ gsub(';', paste0("_", cur_column(), ";"), .))) |>
+  mutate(across(!c(id, DevType, ConvertedCompYearly), ~ if_else(!is.na(.), paste0(., "_", cur_column()), .)))
+
+head(grouped_skills)
+```
+
+
+What we are doing: combine all skill columns into one skills column with a ";" delimeter, then exploding the giant string into one entry per element with a present column. Remove empty and repeated values, then pivot wider the skills and filling in 0s for non-present skills. We have about 350 skills in total.
+
+```{r big break}
+skills_chart <- grouped_skills |>
+  unite("skills", LanguageHaveWorkedWith:AISearchDevHaveWorkedWith, sep = ";", na.rm = TRUE) |>
+  separate_longer_delim(skills, delim = ";") |>
+  mutate(present = 1) |>
+  filter(skills != "") |>
+  distinct() |> 
+  pivot_wider(id_cols = c(id, DevType, ConvertedCompYearly), names_from = skills, values_from = present, values_fill = 0)
+
+head(skills_chart)
+colnames(skills_chart)
+```
+
+Defining a cutoff to exclude skills which only a few individuals reported having. What should we set this as? Total of relevant skills at a 5% cutoff is 130.
+
+```{r looking at skill cutoffs}
+cutoff <- 0.05 * total_devs
+
+skill_population <- skills_chart |>
+  summarise(across(!c(id, DevType, ConvertedCompYearly), ~ sum(.))) |>
+  pivot_longer(everything(), names_to = "skill", values_to = "count") |>
+  separate_wider_delim(skill, delim = "_", names = c("skill", "skill_group"))
+
+skills_above_cutoff <- skill_population |>
+  filter(count > cutoff)
+
+nrow(skill_population)
+nrow(skills_above_cutoff)
+
+skills_above_cutoff |>
+  arrange(desc(count))
+
+skills_above_cutoff |>
+  arrange(count)
+```
+
+What does frequency mean? A group gets "points" for the sum of every skill in it, so if a dev has multiple skills in a group that group will get a "point" for each skill that dev has. 
+
+```{r looking at skills by group above cutoff}
+grouped_frequency <- skills_above_cutoff |>
+  group_by(skill_group) |>
+  summarise(group_skill_frequency = sum(count), n = n()) |>
+  mutate(frequency_per_skill = group_skill_frequency / n)
+
+grouped_frequency |>
+  arrange(desc(frequency_per_skill))
+```
+
+Now we have just the skills that appear frequently enough to be analyzed.
+
+```{r pairing down to relevant skills}
+smash_skills <- skills_above_cutoff |>
+  unite("skill", c(skill,skill_group), sep = "_")
+
+relevant_skills_chart <- skills_chart |>
+  select(c(id, DevType, ConvertedCompYearly) | smash_skills$skill)
+
+colnames(relevant_skills_chart)
+```
+
+Now we have the skill with the highest average salary and the top 5 skills in each group by average salary
+
+```{r pairing down to relevant skills}
+all_skills_rank <- relevant_skills_chart |>
+  pivot_longer(`Bash/Shell (all shells)_LanguageHaveWorkedWith`:Cargo_EmbeddedHaveWorkedWith, names_to = "skill", values_to = "has_skill") |>
+  filter(has_skill > 0) |>
+  group_by(skill) |>
+  summarise(avg_comp = mean(ConvertedCompYearly)) |>
+  separate_wider_delim(skill, delim = "_", names = c("skill", "skill_group")) |>
+  arrange(desc(avg_comp))
+
+all_skills_rank
+  
+top_5_group <- all_skills_rank |>
+  ungroup() |>
+  group_by(skill_group) |>
+  slice_max(avg_comp, n=5)
+
+top_5_group
+```
+
+There are still a lot of skills and groups, so pairing the data down for visualization may be better. Can also look at skills by devtype like above, or do statistics on how much each skill adds above average or above average by job group (similar to WAR)?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

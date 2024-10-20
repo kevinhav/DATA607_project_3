@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.555">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -34,7 +34,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -69,9 +69,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="ds_skills_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="ds_skills_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script src="ds_skills_files/libs/kePrint-0.0.1/kePrint.js"></script>
-
 <link href="ds_skills_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
-
 
 
 </head>
@@ -140,6 +138,19 @@ The following objects are masked from 'package:base':
 
     as.Date, as.Date.numeric</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'scales'
+
+The following object is masked from 'package:purrr':
+
+    discard
+
+The following object is masked from 'package:readr':
+
+    col_factor</code></pre>
+</div>
 </div>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
@@ -149,10 +160,10 @@ The following objects are masked from 'package:base':
 <p>The O*NET database includes information on skills, abilities, knowledge, work activities, and interests associated with occupations. This information can be used to facilitate career exploration, vocational counseling, and a variety of human resources functions, such as developing job orders and position descriptions and aligning training with current workplace needs.</p>
 <p>For our analysis we have isolated Data Scientists and Statisticians as the primary occupations of interest. Note that Data Scientist is considered a “parent” occupation, and includes the sub-occupations of Business Intelligence Analyst and Clinical Data Managers. O*NET groups occupations according to how similar it finds their “work activities” to be. We will collectively refer to these occupations as “data scientists” going forward.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load all ONET data</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">'../data/raw/load_onet_historical_data.R'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load all ONET data</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">'../data/raw/load_onet_historical_data.R'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Using libcurl 8.3.0 with Schannel</code></pre>
+<pre><code>Using libcurl 8.7.1 with LibreSSL/3.3.6</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>
@@ -177,12 +188,12 @@ Attaching package: 'janitor'</code></pre>
 <h3 class="anchored" data-anchor-id="skills">skills</h3>
 <p>The analysts behind O*NET data measure skills relevancy to an occupation in two ways; <em>Level</em> and <em>Importance.</em></p>
 <p><em>Level</em> refers to the degree of expertise the job requires. For example, surgery might be a relevant skill for both a nurse and a surgeon, however the surgeon would require a much higher level in the skill.</p>
-<p><em>Importance</em> refers to how how many work activities require the use of such a skill. Using another example, Service Orientation would have a very high level of importance to a waiter in a restaurant, but perhaps a low level required (depending on the restaurant).</p>
+<p><em>Importance</em> refers to how many work activities require the use of such a skill. Using another example, Service Orientation would have a very high level of importance to a waiter in a restaurant, but perhaps a low level required (depending on the restaurant).</p>
 <p>Both of these dimensions are rated on a scale of 1 - 5, with one being the lowest and five being the highest.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>skills <span class="ot">&lt;-</span> onet_24<span class="sc">$</span>skills</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(skills))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>skills <span class="ot">&lt;-</span> onet_24<span class="sc">$</span>skills</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(skills))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <colgroup>
@@ -321,37 +332,37 @@ Attaching package: 'janitor'</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>top_skills <span class="ot">&lt;-</span> skills <span class="sc">|&gt;</span> </span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(element_name) <span class="sc">|&gt;</span> </span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">max_value =</span> <span class="fu">max</span>(data_value), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(max_value)) <span class="sc">|&gt;</span> </span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">15</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(element_name)</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>skills <span class="sc">|&gt;</span> </span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(element_name <span class="sc">%in%</span> top_skills) <span class="sc">|&gt;</span> </span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(data_value), element_name, scale_id) <span class="sc">|&gt;</span> </span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fct_reorder</span>(element_name, data_value, <span class="at">.fun =</span> max, <span class="at">.desc =</span> <span class="cn">FALSE</span>), <span class="at">y =</span> data_value, <span class="at">fill =</span> scale_id)) <span class="sc">+</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>, <span class="at">width =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Top Skills for Data Scientists"</span>,</span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Skill"</span>,</span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Rating"</span>,</span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">c</span>(<span class="st">"Level"</span>, <span class="st">"Importance"</span>),</span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Based on 2024 O*NET Data"</span></span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">face =</span> <span class="st">"italic"</span>),</span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>,</span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.caption.position =</span> <span class="st">"plot"</span>) <span class="sc">+</span></span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Rating Type"</span>,</span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"LV"</span> <span class="ot">=</span> <span class="st">"Level"</span>, <span class="st">"IM"</span> <span class="ot">=</span> <span class="st">"Importance"</span>),</span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"LV"</span> <span class="ot">=</span> <span class="st">"#203D46"</span>, <span class="st">"IM"</span> <span class="ot">=</span> <span class="st">"#B83F21"</span>)</span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>top_skills <span class="ot">&lt;-</span> skills <span class="sc">|&gt;</span> </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(element_name) <span class="sc">|&gt;</span> </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">max_value =</span> <span class="fu">max</span>(data_value), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(max_value)) <span class="sc">|&gt;</span> </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">15</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(element_name)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>skills <span class="sc">|&gt;</span> </span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(element_name <span class="sc">%in%</span> top_skills) <span class="sc">|&gt;</span> </span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(data_value), element_name, scale_id) <span class="sc">|&gt;</span> </span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fct_reorder</span>(element_name, data_value, <span class="at">.fun =</span> max, <span class="at">.desc =</span> <span class="cn">FALSE</span>), <span class="at">y =</span> data_value, <span class="at">fill =</span> scale_id)) <span class="sc">+</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>, <span class="at">width =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Top Skills for Data Scientists"</span>,</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Skill"</span>,</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Rating"</span>,</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">c</span>(<span class="st">"Level"</span>, <span class="st">"Importance"</span>),</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Based on 2024 O*NET Data"</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">face =</span> <span class="st">"italic"</span>),</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>,</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.caption.position =</span> <span class="st">"plot"</span>) <span class="sc">+</span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Rating Type"</span>,</span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"LV"</span> <span class="ot">=</span> <span class="st">"Level"</span>, <span class="st">"IM"</span> <span class="ot">=</span> <span class="st">"Importance"</span>),</span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"LV"</span> <span class="ot">=</span> <span class="st">"#203D46"</span>, <span class="st">"IM"</span> <span class="ot">=</span> <span class="st">"#B83F21"</span>)</span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -368,9 +379,9 @@ Attaching package: 'janitor'</code></pre>
 <p>Abilities differ from skills in that they refer more to an individual’s enduring attributes, and are less likely to be actively developed. You could think of abilities in this context as a person’s natural proclivities.</p>
 <p>similar to skills, abilities are rated again by Level and Importance.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>abilities <span class="ot">&lt;-</span> onet_24<span class="sc">$</span>abilities</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(abilities))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>abilities <span class="ot">&lt;-</span> onet_24<span class="sc">$</span>abilities</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(abilities))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <colgroup>
@@ -525,9 +536,9 @@ Attaching package: 'janitor'</code></pre>
 <p>Technology skills are associated with a given occupation based on requirements seen in relevant job postings.</p>
 <p>“Hot Technology” indicates that this particular skill is popular across occupations, while “in demand” indicates requirements frequently included in job postings for the particular occupation of data scientist.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>tech_skills <span class="ot">&lt;-</span> onet_24<span class="sc">$</span>tech</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(tech_skills))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>tech_skills <span class="ot">&lt;-</span> onet_24<span class="sc">$</span>tech</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(tech_skills))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <colgroup>
@@ -611,14 +622,14 @@ Attaching package: 'janitor'</code></pre>
 </div>
 <p>When looking at In Demand skills for data scientist, we can see those that are unique to the profession when Hot Technology is “N”. This indicates that experience in this type of software is not commonly required in today’s job market, however is highly sought after for data scientists specifically.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>tech_skills <span class="sc">|&gt;</span>  </span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(in_demand <span class="sc">==</span> <span class="st">"Y"</span>, soc_name <span class="sc">==</span> <span class="st">"data_scientist"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(commodity_title, example, hot_technology, in_demand) <span class="sc">|&gt;</span> </span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(commodity_title) <span class="sc">|&gt;</span> </span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"Category"</span> <span class="ot">=</span> commodity_title, <span class="st">"Software"</span> <span class="ot">=</span> example, <span class="st">"Hot Technology"</span> <span class="ot">=</span> hot_technology, <span class="st">"In Demand"</span> <span class="ot">=</span> in_demand) <span class="sc">|&gt;</span> </span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="st">"hover"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">row_spec</span>(<span class="fu">c</span>(<span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">13</span>, <span class="dv">15</span>), <span class="at">background =</span> <span class="st">"#B83F21"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>tech_skills <span class="sc">|&gt;</span>  </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(in_demand <span class="sc">==</span> <span class="st">"Y"</span>, soc_name <span class="sc">==</span> <span class="st">"data_scientist"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(commodity_title, example, hot_technology, in_demand) <span class="sc">|&gt;</span> </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(commodity_title) <span class="sc">|&gt;</span> </span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"Category"</span> <span class="ot">=</span> commodity_title, <span class="st">"Software"</span> <span class="ot">=</span> example, <span class="st">"Hot Technology"</span> <span class="ot">=</span> hot_technology, <span class="st">"In Demand"</span> <span class="ot">=</span> in_demand) <span class="sc">|&gt;</span> </span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="st">"hover"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">row_spec</span>(<span class="fu">c</span>(<span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">13</span>, <span class="dv">15</span>), <span class="at">background =</span> <span class="st">"#B83F21"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-hover caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
@@ -774,6 +785,135 @@ Attaching package: 'janitor'</code></pre>
 </section>
 <section id="what-skills-are-most-valuable" class="level2">
 <h2 class="anchored" data-anchor-id="what-skills-are-most-valuable">What skills are most valuable?</h2>
+<p>Nailing down the value of a skill can be difficult, as value can be defined any number of ways. Additionally, soft skills are simply hard to measure. When has one attained mastery of written expression or speaking? The thresholds and measures of such skills are subjective and therefore difficult to track. Technical skills, however, are a bit easier to measure. While defining mastery of a technical skill is still nebulous, a common practice across the tech industry is to conduct a technical interview which evaluates a candidate’s skills with the technologies the role requires. We can therefore conclude that if an individual uses a technology in their role they have a baseline competency that meets the standards of the industry. Having set a threshold for skill competency, we still need to determine how to value the skill. The O*NET data has given us the relative value of these skills, but we can attach a more absolute value to a skill by tracking the average salary of individuals with said skill.</p>
+<section id="the-stack-overflow-developer-survey" class="level3">
+<h3 class="anchored" data-anchor-id="the-stack-overflow-developer-survey">The Stack Overflow Developer Survey</h3>
+<p>Every year Stack Overflow conducts a voluntary survey of its users. While not strictly a representative sample of the industry it is the closest thing to one that is publicly available due to the reliance of tech workers on the Stack Overflow forums. The survey is considered one of the best resources for tracking tech trends and conveniently also tracks the role and salary of respondents as well as numerous other indicators. For our purposes we will be looking at the skills and tools used by data scientists in their current role.</p>
+</section>
+<section id="tidying-the-data" class="level3">
+<h3 class="anchored" data-anchor-id="tidying-the-data">Tidying the Data</h3>
+<p>The survey covers all kinds of developers, of which data scientists make a relatively small proportion of the sample. While there is a “Data scientist or machine learning specialist” category, we are expanding our sample to include roles that have significant overlap in skills and duties which can be filled by individuals who may otherwise be considered data scientists. The developer types we will look at are “Data engineer”, “Data scientist or machine learning specialist”, “Data or business analyst”, and “Developer, AI”. Normally we would want to address missing values for skills, but in this case the value of a skill is defined as much by who has it as who does not as those with specialized knowledge can demand a higher salary. For our purposes we will consider any skill that fewer than 10% of our sample population have as too niche to be considered.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Change this as needed, absolute path works better than relative for me</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="st">"/Users/matttillman/School/DATA607_project_3/data/processed/stack_overflow_jobs.csv"</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>so_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(file_path) <span class="sc">|&gt;</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">!</span><span class="fu">c</span>(<span class="st">"OfficeStackSyncHaveWorkedWith"</span>, <span class="st">"OfficeStackAsyncHaveWorkedWith"</span>))</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>total_devs <span class="ot">&lt;-</span> <span class="fu">nrow</span>(so_data)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Need to hide this</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>cutoff <span class="ot">&lt;-</span> <span class="fl">0.1</span> <span class="sc">*</span> total_devs</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>grouped_skills <span class="ot">&lt;-</span> so_data <span class="sc">|&gt;</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowid_to_column</span>(<span class="st">"id"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="sc">!</span><span class="fu">c</span>(id, DevType, ConvertedCompYearly), <span class="sc">~</span> <span class="fu">gsub</span>(<span class="st">';'</span>, <span class="fu">paste0</span>(<span class="st">"_"</span>, <span class="fu">cur_column</span>(), <span class="st">";"</span>), .))) <span class="sc">|&gt;</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="sc">!</span><span class="fu">c</span>(id, DevType, ConvertedCompYearly), <span class="sc">~</span> <span class="fu">if_else</span>(<span class="sc">!</span><span class="fu">is.na</span>(.), <span class="fu">paste0</span>(., <span class="st">"_"</span>, <span class="fu">cur_column</span>()), .)))</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>skills_chart <span class="ot">&lt;-</span> grouped_skills <span class="sc">|&gt;</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unite</span>(<span class="st">"skills"</span>, LanguageHaveWorkedWith<span class="sc">:</span>AISearchDevHaveWorkedWith, <span class="at">sep =</span> <span class="st">";"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate_longer_delim</span>(skills, <span class="at">delim =</span> <span class="st">";"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">present =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(skills <span class="sc">!=</span> <span class="st">""</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> <span class="fu">c</span>(id, DevType, ConvertedCompYearly), <span class="at">names_from =</span> skills, <span class="at">values_from =</span> present, <span class="at">values_fill =</span> <span class="dv">0</span>) </span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>skill_population <span class="ot">&lt;-</span> skills_chart <span class="sc">|&gt;</span></span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="sc">!</span><span class="fu">c</span>(id, DevType, ConvertedCompYearly), <span class="sc">~</span> <span class="fu">sum</span>(.))) <span class="sc">|&gt;</span></span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"skill"</span>, <span class="at">values_to =</span> <span class="st">"count"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate_wider_delim</span>(skill, <span class="at">delim =</span> <span class="st">"_"</span>, <span class="at">names =</span> <span class="fu">c</span>(<span class="st">"skill"</span>, <span class="st">"skill_group"</span>))</span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>skills_above_cutoff <span class="ot">&lt;-</span> skill_population <span class="sc">|&gt;</span></span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(count <span class="sc">&gt;</span> cutoff)</span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>smash_skills <span class="ot">&lt;-</span> skills_above_cutoff <span class="sc">|&gt;</span></span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unite</span>(<span class="st">"skill"</span>, <span class="fu">c</span>(skill,skill_group), <span class="at">sep =</span> <span class="st">"_"</span>)</span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>relevant_skills_chart <span class="ot">&lt;-</span> skills_chart <span class="sc">|&gt;</span></span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(id, DevType, ConvertedCompYearly) <span class="sc">|</span> smash_skills<span class="sc">$</span>skill)</span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a>all_relevant_skills_rank <span class="ot">&lt;-</span> relevant_skills_chart <span class="sc">|&gt;</span></span>
+<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">!</span><span class="fu">c</span>(<span class="st">"id"</span>, <span class="st">"DevType"</span>, <span class="st">"ConvertedCompYearly"</span>), <span class="at">names_to =</span> <span class="st">"skill"</span>, <span class="at">values_to =</span> <span class="st">"has_skill"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(has_skill <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(skill) <span class="sc">|&gt;</span></span>
+<span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">avg_comp =</span> <span class="fu">mean</span>(ConvertedCompYearly)) <span class="sc">|&gt;</span></span>
+<span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate_wider_delim</span>(skill, <span class="at">delim =</span> <span class="st">"_"</span>, <span class="at">names =</span> <span class="fu">c</span>(<span class="st">"skill"</span>, <span class="st">"skill_group"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(avg_comp)) <span class="sc">|&gt;</span></span>
+<span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(skill_group <span class="sc">!=</span> <span class="st">"NEWCollabToolsHaveWorkedWith"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">skill_group =</span> <span class="fu">str_replace</span>(skill_group, <span class="st">"HaveWorkedWith"</span>, <span class="st">""</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>When we look at the top skills by average salary we can see some interesting patterns. In terms of “skill groups” there does not appear to be a single kind of skill that is more valuable than others. Having a diverse scope of knowledge across the surveyed technology types appears to lead to higher salaries, as every skill group has at least one technology in the top third of average salaries. In the bottom third of the plot we can find technologies like MongoDB or MySQL which have largely been supplanted by newer or more performant technologies. The middle third of the chart is populated by what we can consider to be the expected standard skills, technologies which do not differentiate a candidate but are also not correlated with lower paying jobs. Technologies like R, Pandas, Python, Docker, and PostgreSQL fall into this category. There is a clear jump in the value of skills with an average salary over $100,000 indicating these skills are differentiators in the industry. Familiarity with tools such as Kafka, Spark, Databricks, Terraform, AWS, and Snowflake as well as the associated skills of interpreting and manipulating data in real time at scale are clearly a big selling point for employers. Interestingly we see an AI tool topping the list in Claude, and another in Github Copilot near the top. This seems to indicate that familiarity with AI tools can be a differentiator, although the lack of other AI tools making the cutoff for relevant skills means the specific tool matters. It will be interesting to see whether the AI tools remain relevant or if they get supplanted in time.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>all_relevant_skills_rank <span class="sc">|&gt;</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(avg_comp)) <span class="sc">|&gt;</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> avg_comp, <span class="at">y =</span> <span class="fu">fct_reorder</span>(skill, avg_comp), <span class="at">fill =</span> skill_group)) <span class="sc">+</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>),</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>),</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>)) <span class="sc">+</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> <span class="fu">label_comma</span>()) <span class="sc">+</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Technical Skills by Value"</span>, <span class="at">x =</span> <span class="st">"Average Salary (USD)"</span>, <span class="at">y =</span> <span class="st">"Technology Used"</span>, <span class="at">fill =</span> <span class="st">"Skill Group"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ds_skills_files/figure-html/plotting%20skills-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Tieing our analysis back into the O*NET data we can use the tech skills explicitly identified as reference points to expand our understanding of the relative value of skills not included in the O*NET data. It should be noted that GIT, SAS, Hadoop, and Excel do not appear in the data we pulled from the Stack Overflow Survey. Hadoop is an outdated technology that has been supplanted by Spark, so we can safely disregard it. GIT is a surprising omission from this dataset and given its prevalence as a development tool it likely appears in one of the categories that was not pulled. The same can be said of SAS and Excel, which are the only remaining omissions. Several of the technologies listed in the O*NET technical skills are families of technologies, most notably SQL and NoSQL so in those cases technologies which are part of those families are colored the same.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>tech_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"R"</span> <span class="ot">=</span> <span class="st">"#8AB17D"</span>, </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Python"</span> <span class="ot">=</span> <span class="st">"#4A7A8C"</span>, </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Git"</span> <span class="ot">=</span> <span class="st">"#E7B16C"</span>, </span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Amazon Web Services (AWS)"</span> <span class="ot">=</span> <span class="st">"#D9421C"</span>, </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Redis"</span> <span class="ot">=</span> <span class="st">"#E9C46A"</span>, </span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Elasticsearch"</span> <span class="ot">=</span> <span class="st">"#E9C46A"</span>, </span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"MongoDB"</span> <span class="ot">=</span> <span class="st">"#E9C46A"</span>,</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SAS"</span> <span class="ot">=</span> <span class="st">"#BABB74"</span>, </span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Apache Spark"</span> <span class="ot">=</span> <span class="st">"#F4A261"</span>, </span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Hadoop"</span> <span class="ot">=</span> <span class="st">"#E76F51"</span>, </span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Excel"</span> <span class="ot">=</span> <span class="st">"#264653"</span>, </span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Databricks SQL"</span> <span class="ot">=</span> <span class="st">"#2A9D8F"</span>, </span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"PostgreSQL"</span> <span class="ot">=</span> <span class="st">"#2A9D8F"</span>, </span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SQL"</span> <span class="ot">=</span> <span class="st">"#2A9D8F"</span>, </span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Microsoft SQL Server"</span> <span class="ot">=</span> <span class="st">"#2A9D8F"</span>, </span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SQLite"</span> <span class="ot">=</span> <span class="st">"#2A9D8F"</span>, </span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">"MySQL"</span> <span class="ot">=</span> <span class="st">"#2A9D8F"</span>,</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Pandas"</span> <span class="ot">=</span> <span class="st">"#47856A"</span>, </span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Scikit-Learn"</span> <span class="ot">=</span> <span class="st">"#864653"</span>, </span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"TensorFlow"</span> <span class="ot">=</span> <span class="st">"#99756F"</span></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>) </span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>all_relevant_skills_rank <span class="sc">|&gt;</span></span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(avg_comp)) <span class="sc">|&gt;</span></span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> avg_comp, <span class="at">y =</span> <span class="fu">fct_reorder</span>(skill, avg_comp), <span class="at">fill =</span> skill)) <span class="sc">+</span></span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>),</span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>),</span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>)) <span class="sc">+</span></span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> <span class="fu">label_comma</span>()) <span class="sc">+</span></span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Technical Skills by Value"</span>, <span class="at">x =</span> <span class="st">"Average Salary (USD)"</span>, <span class="at">y =</span> <span class="st">"Technology Used"</span>, <span class="at">fill =</span> <span class="st">"Skill Group"</span>) <span class="sc">+</span></span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> tech_colors)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ds_skills_files/figure-html/plotting%20skills%20highlighted-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
 </section>
 <section id="what-skills-are-people-training-in" class="level2">
 <h2 class="anchored" data-anchor-id="what-skills-are-people-training-in">What skills are people training in?</h2>
@@ -783,80 +923,80 @@ Attaching package: 'janitor'</code></pre>
 <h1>Data Acquisition</h1>
 <p>To obtain this data, we used Python, Beautiful Soup, and Selenium to scrape the LinkedInLearning catalog for links to the main course pages. With the list of links, we then automated navigation to each main course page and scraped the overarching course topic, course title, description, published date, to-date enrollment, and skill tags.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load all LinkedInLearning Data</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>LL_Data_Science <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"..</span><span class="sc">\\</span><span class="st">data</span><span class="sc">\\</span><span class="st">raw</span><span class="sc">\\</span><span class="st">Data-Science_Data.csv"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">";"</span>)</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>LL_Artificial_Intelligence <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"..</span><span class="sc">\\</span><span class="st">data</span><span class="sc">\\</span><span class="st">raw</span><span class="sc">\\</span><span class="st">Artificial-Intelligence_Data.csv"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">";"</span>)</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>full_LL_dataset <span class="ot">&lt;-</span> <span class="fu">rbind</span>(LL_Data_Science,LL_Artificial_Intelligence) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load all LinkedInLearning Data</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>LL_Data_Science <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../data/raw/Data-Science_Data.csv"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">";"</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>LL_Artificial_Intelligence <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../data/raw/Artificial-Intelligence_Data.csv"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">";"</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>full_LL_dataset <span class="ot">&lt;-</span> <span class="fu">rbind</span>(LL_Data_Science,LL_Artificial_Intelligence) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="data-cleaning" class="level1">
 <h1>Data Cleaning</h1>
 <p>The raw dataset contained skill tags as a list in the last column. These skills were separated and converted to their own individual record. Since Viewership is dependent on Published Date, the data was standardized by including the column Active Days which denote how many days the course has been active, based on the date of data acquisition and the date of course publication. YearMonth, which takes the year and month of course publication, was also included into the full dataset in the data cleaning process.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>full_LL_dataset <span class="ot">&lt;-</span> full_LL_dataset <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">Topic =</span> X0, <span class="at">Title =</span> X1, <span class="at">Published =</span> X2, <span class="at">Enrollment =</span> X3, <span class="at">Description =</span> X4, <span class="at">Skills =</span> X5)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>full_LL_dataset<span class="sc">$</span>Skills <span class="ot">&lt;-</span> <span class="fu">substr</span>(full_LL_dataset<span class="sc">$</span>Skills, <span class="dv">2</span>, <span class="fu">nchar</span>(full_LL_dataset<span class="sc">$</span>Skills) <span class="sc">-</span> <span class="dv">1</span>)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>full_LL_dataset <span class="ot">&lt;-</span> <span class="fu">separate_rows</span>(full_LL_dataset, Skills, <span class="at">sep =</span> <span class="st">","</span>)</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>full_LL_dataset<span class="sc">$</span>Skills <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"^'|'$"</span>, <span class="st">""</span>, <span class="fu">trimws</span>(full_LL_dataset<span class="sc">$</span>Skills))</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>full_LL_dataset <span class="ot">&lt;-</span> full_LL_dataset <span class="sc">%&gt;%</span> </span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Published =</span> <span class="fu">as.Date</span>(Published)) <span class="sc">%&gt;%</span> </span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">active_days =</span> <span class="fu">as.numeric</span>(<span class="fu">as.Date</span>(<span class="st">"2024-10-16"</span>)<span class="sc">-</span>Published)) <span class="sc">%&gt;%</span> </span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">YearMonth =</span> <span class="fu">as.yearmon</span>(Published))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>full_LL_dataset <span class="ot">&lt;-</span> full_LL_dataset <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">Topic =</span> X0, <span class="at">Title =</span> X1, <span class="at">Published =</span> X2, <span class="at">Enrollment =</span> X3, <span class="at">Description =</span> X4, <span class="at">Skills =</span> X5)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>full_LL_dataset<span class="sc">$</span>Skills <span class="ot">&lt;-</span> <span class="fu">substr</span>(full_LL_dataset<span class="sc">$</span>Skills, <span class="dv">2</span>, <span class="fu">nchar</span>(full_LL_dataset<span class="sc">$</span>Skills) <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>full_LL_dataset <span class="ot">&lt;-</span> <span class="fu">separate_rows</span>(full_LL_dataset, Skills, <span class="at">sep =</span> <span class="st">","</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>full_LL_dataset<span class="sc">$</span>Skills <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"^'|'$"</span>, <span class="st">""</span>, <span class="fu">trimws</span>(full_LL_dataset<span class="sc">$</span>Skills))</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>full_LL_dataset <span class="ot">&lt;-</span> full_LL_dataset <span class="sc">%&gt;%</span> </span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Published =</span> <span class="fu">as.Date</span>(Published)) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">active_days =</span> <span class="fu">as.numeric</span>(<span class="fu">as.Date</span>(<span class="st">"2024-10-16"</span>)<span class="sc">-</span>Published)) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">YearMonth =</span> <span class="fu">as.yearmon</span>(Published))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="technology-skills-1" class="level1">
 <h1>Technology Skills</h1>
 <p>For consistency, the skills centered in this analysis follow the shortlist from the previous sections.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>full_LL_dataset_onet_mapped <span class="ot">&lt;-</span> full_LL_dataset <span class="sc">%&gt;%</span> <span class="fu">distinct</span>(Title, Published, Skills, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span>   </span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">skills_onet =</span> <span class="fu">case_when</span>( <span class="co"># rename the skills as named in LinkedInLearning to match onet data</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"R (Programming Language)"</span>      <span class="sc">~</span> <span class="st">"R"</span>,</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"Python (Programming Language)"</span> <span class="sc">~</span> <span class="st">"Python"</span>,</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"GitHub"</span>   <span class="sc">~</span> <span class="st">"Git"</span>,</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"Amazon Web Services (AWS)"</span>    <span class="sc">~</span> <span class="st">"AWS"</span>,</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"Apache Spark"</span>    <span class="sc">~</span> <span class="st">"Spark"</span>,</span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"Excel Dashboards"</span>      <span class="sc">~</span> <span class="st">"Excel"</span>,</span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"Excel Modeling"</span>      <span class="sc">~</span> <span class="st">"Excel"</span>,</span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"Microsoft Excel"</span>      <span class="sc">~</span> <span class="st">"Excel"</span>,</span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"Pandas (Software)"</span> <span class="sc">~</span> <span class="st">"Pandas"</span>,</span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"Scikit-Learn"</span>   <span class="sc">~</span> <span class="st">"Scikit-learn"</span>,</span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"SAS (Programming Language)"</span>   <span class="sc">~</span> <span class="st">"SAS"</span>,</span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"SQL"</span>    <span class="sc">~</span> <span class="st">"SQL"</span>,</span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"Hadoop"</span>    <span class="sc">~</span> <span class="st">"Hadoop"</span>,</span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"NoSQL"</span>    <span class="sc">~</span> <span class="st">"NoSQL"</span>,</span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"TensorFlow"</span>    <span class="sc">~</span> <span class="st">"TensorFlow"</span></span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">%&gt;%</span> <span class="fu">na.omit</span>() <span class="co"># remove all data that does not fall within these categories</span></span>
-<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>tech_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">"R"</span> <span class="ot">=</span> <span class="st">"#8AB17D"</span>, </span>
-<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Python"</span> <span class="ot">=</span> <span class="st">"#4A7A8C"</span>, </span>
-<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Git"</span> <span class="ot">=</span> <span class="st">"#E7B16C"</span>, </span>
-<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>  <span class="st">"AWS"</span> <span class="ot">=</span> <span class="st">"#D9421C"</span>, </span>
-<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NoSQL"</span> <span class="ot">=</span> <span class="st">"#E9C46A"</span>, </span>
-<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SAS"</span> <span class="ot">=</span> <span class="st">"#BABB74"</span>, </span>
-<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Spark"</span> <span class="ot">=</span> <span class="st">"#F4A261"</span>, </span>
-<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Hadoop"</span> <span class="ot">=</span> <span class="st">"#E76F51"</span>, </span>
-<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Excel"</span> <span class="ot">=</span> <span class="st">"#264653"</span>, </span>
-<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SQL"</span> <span class="ot">=</span> <span class="st">"#2A9D8F"</span>, </span>
-<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>  <span class="st">"pandas"</span> <span class="ot">=</span> <span class="st">"#47856A"</span>, </span>
-<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Scikit-learn"</span> <span class="ot">=</span> <span class="st">"#864653"</span>, </span>
-<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>  <span class="st">"TensorFlow"</span> <span class="ot">=</span> <span class="st">"#99756F"</span></span>
-<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>full_LL_dataset_onet_mapped <span class="ot">&lt;-</span> full_LL_dataset <span class="sc">%&gt;%</span> <span class="fu">distinct</span>(Title, Published, Skills, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span>   </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">skills_onet =</span> <span class="fu">case_when</span>( <span class="co"># rename the skills as named in LinkedInLearning to match onet data</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"R (Programming Language)"</span>      <span class="sc">~</span> <span class="st">"R"</span>,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"Python (Programming Language)"</span> <span class="sc">~</span> <span class="st">"Python"</span>,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"GitHub"</span>   <span class="sc">~</span> <span class="st">"Git"</span>,</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"Amazon Web Services (AWS)"</span>    <span class="sc">~</span> <span class="st">"AWS"</span>,</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"Apache Spark"</span>    <span class="sc">~</span> <span class="st">"Spark"</span>,</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"Excel Dashboards"</span>      <span class="sc">~</span> <span class="st">"Excel"</span>,</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"Excel Modeling"</span>      <span class="sc">~</span> <span class="st">"Excel"</span>,</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"Microsoft Excel"</span>      <span class="sc">~</span> <span class="st">"Excel"</span>,</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"Pandas (Software)"</span> <span class="sc">~</span> <span class="st">"Pandas"</span>,</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"Scikit-Learn"</span>   <span class="sc">~</span> <span class="st">"Scikit-learn"</span>,</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"SAS (Programming Language)"</span>   <span class="sc">~</span> <span class="st">"SAS"</span>,</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"SQL"</span>    <span class="sc">~</span> <span class="st">"SQL"</span>,</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"Hadoop"</span>    <span class="sc">~</span> <span class="st">"Hadoop"</span>,</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"NoSQL"</span>    <span class="sc">~</span> <span class="st">"NoSQL"</span>,</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>    Skills <span class="sc">==</span> <span class="st">"TensorFlow"</span>    <span class="sc">~</span> <span class="st">"TensorFlow"</span></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">%&gt;%</span> <span class="fu">na.omit</span>() <span class="co"># remove all data that does not fall within these categories</span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>tech_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">"R"</span> <span class="ot">=</span> <span class="st">"#8AB17D"</span>, </span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Python"</span> <span class="ot">=</span> <span class="st">"#4A7A8C"</span>, </span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Git"</span> <span class="ot">=</span> <span class="st">"#E7B16C"</span>, </span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>  <span class="st">"AWS"</span> <span class="ot">=</span> <span class="st">"#D9421C"</span>, </span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>  <span class="st">"NoSQL"</span> <span class="ot">=</span> <span class="st">"#E9C46A"</span>, </span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SAS"</span> <span class="ot">=</span> <span class="st">"#BABB74"</span>, </span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Spark"</span> <span class="ot">=</span> <span class="st">"#F4A261"</span>, </span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Hadoop"</span> <span class="ot">=</span> <span class="st">"#E76F51"</span>, </span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Excel"</span> <span class="ot">=</span> <span class="st">"#264653"</span>, </span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SQL"</span> <span class="ot">=</span> <span class="st">"#2A9D8F"</span>, </span>
+<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a>  <span class="st">"pandas"</span> <span class="ot">=</span> <span class="st">"#47856A"</span>, </span>
+<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Scikit-learn"</span> <span class="ot">=</span> <span class="st">"#864653"</span>, </span>
+<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a>  <span class="st">"TensorFlow"</span> <span class="ot">=</span> <span class="st">"#99756F"</span></span>
+<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>For the base analysis, we can look at total viewership by Technology Skill. We can see the top four skills are Excel, SQL, Python, and R, with Excel leading by a significant margin. The top four skills appear to have significantly higher enrollment than the other top skills identified by the O*NET data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>Skill_Enrollment_onet_mapped <span class="ot">&lt;-</span> full_LL_dataset_onet_mapped <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(skills_onet) <span class="sc">%&gt;%</span> <span class="fu">summarize</span>(<span class="at">avg_total_daily_enrollment =</span> <span class="fu">sum</span>(Enrollment)<span class="sc">/</span><span class="fu">sum</span>(active_days), <span class="at">total_enrollment =</span> <span class="fu">sum</span>(Enrollment)) </span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>Skill_Enrollment_onet_mapped <span class="sc">%&gt;%</span> </span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> total_enrollment, <span class="at">y =</span> <span class="fu">reorder</span>(skills_onet,total_enrollment), <span class="at">fill =</span> skills_onet)) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">stat=</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> tech_colors</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="st">"none"</span>) <span class="sc">+</span> </span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> <span class="cf">function</span>(total_enrollment) <span class="fu">format</span>(total_enrollment, <span class="at">scientific =</span> <span class="cn">FALSE</span>)) <span class="sc">+</span> </span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Total Enrollment by Technology Skill"</span>, <span class="at">y =</span> <span class="st">"Technology Skill"</span>, <span class="at">x =</span> <span class="st">"Enrollment"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>Skill_Enrollment_onet_mapped <span class="ot">&lt;-</span> full_LL_dataset_onet_mapped <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(skills_onet) <span class="sc">%&gt;%</span> <span class="fu">summarize</span>(<span class="at">avg_total_daily_enrollment =</span> <span class="fu">sum</span>(Enrollment)<span class="sc">/</span><span class="fu">sum</span>(active_days), <span class="at">total_enrollment =</span> <span class="fu">sum</span>(Enrollment)) </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>Skill_Enrollment_onet_mapped <span class="sc">%&gt;%</span> </span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> total_enrollment, <span class="at">y =</span> <span class="fu">reorder</span>(skills_onet,total_enrollment), <span class="at">fill =</span> skills_onet)) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">stat=</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> tech_colors</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="st">"none"</span>) <span class="sc">+</span> </span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> <span class="cf">function</span>(total_enrollment) <span class="fu">format</span>(total_enrollment, <span class="at">scientific =</span> <span class="cn">FALSE</span>)) <span class="sc">+</span> </span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Total Enrollment by Technology Skill"</span>, <span class="at">y =</span> <span class="st">"Technology Skill"</span>, <span class="at">x =</span> <span class="st">"Enrollment"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -867,14 +1007,14 @@ Attaching package: 'janitor'</code></pre>
 </div>
 <p>Using the number of active days per course, we can standardized the data by taking total enrollment per course and divide by total active days. This accounts for newer courses that may have lower total viewership but high daily enrollment with respect to when the course was published. When looking at average daily enrollment, we can see that Excel again far surpasses the other technology skills. However, the gap between all other technology skills is closed significantly. Using this method, we can see that the top five technology skills are Excel, SQL, Python, SAS, and R.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>Skill_Enrollment_onet_mapped <span class="sc">%&gt;%</span> </span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> avg_total_daily_enrollment, <span class="at">y =</span> <span class="fu">reorder</span>(skills_onet,avg_total_daily_enrollment), <span class="at">fill =</span> skills_onet)) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">stat=</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> tech_colors</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="st">"none"</span>) <span class="sc">+</span> </span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Average Daily Enrollment by Technology Skill"</span>, <span class="at">y =</span> <span class="st">"Technology Skill"</span>, <span class="at">x =</span> <span class="st">"Average Daily Enrollment"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>Skill_Enrollment_onet_mapped <span class="sc">%&gt;%</span> </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> avg_total_daily_enrollment, <span class="at">y =</span> <span class="fu">reorder</span>(skills_onet,avg_total_daily_enrollment), <span class="at">fill =</span> skills_onet)) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">stat=</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> tech_colors</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="st">"none"</span>) <span class="sc">+</span> </span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Average Daily Enrollment by Technology Skill"</span>, <span class="at">y =</span> <span class="st">"Technology Skill"</span>, <span class="at">x =</span> <span class="st">"Average Daily Enrollment"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -885,16 +1025,16 @@ Attaching package: 'janitor'</code></pre>
 </div>
 <p>These results, specifically the lessened gap between each skill, can be explained by the fewer number of available courses or more recent publication dates. Both of these variables will affect the number of Active Days, which was used in the standardization of data. Taking a look at number of courses per technology skill, we can see that this is true for skills like SAS and Scikit-learn, which only had one course each resulting in a high average daily enrollment.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>Skill_Count_onet_mapped <span class="ot">&lt;-</span> full_LL_dataset_onet_mapped <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(skills_onet) <span class="sc">%&gt;%</span> <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>())</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>Skill_Count_onet_mapped <span class="sc">%&gt;%</span> </span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> count, <span class="at">y =</span> <span class="fu">reorder</span>(skills_onet,count), <span class="at">fill =</span> skills_onet)) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">stat=</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> tech_colors</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">guides</span>(<span class="at">fill =</span> <span class="st">"none"</span>) <span class="sc">+</span> </span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Number of Courses by Technology Skill"</span>, <span class="at">y =</span> <span class="st">"Technology Skill"</span>, <span class="at">x =</span> <span class="st">"Courses"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>Skill_Count_onet_mapped <span class="ot">&lt;-</span> full_LL_dataset_onet_mapped <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(skills_onet) <span class="sc">%&gt;%</span> <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>())</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>Skill_Count_onet_mapped <span class="sc">%&gt;%</span> </span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> count, <span class="at">y =</span> <span class="fu">reorder</span>(skills_onet,count), <span class="at">fill =</span> skills_onet)) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">stat=</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> tech_colors</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">guides</span>(<span class="at">fill =</span> <span class="st">"none"</span>) <span class="sc">+</span> </span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Number of Courses by Technology Skill"</span>, <span class="at">y =</span> <span class="st">"Technology Skill"</span>, <span class="at">x =</span> <span class="st">"Courses"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -905,18 +1045,18 @@ Attaching package: 'janitor'</code></pre>
 </div>
 <p>We can also look at the count of courses graphed against the total enrollment, where we would expect total enrollment to increase as course quantity increases. If each technology were equally in demand for Linkedin Learners, we would expect the data to exhibit a linear trend. We can see a clear outlier with Excel, having a high count but a much higher total enrollment that does not appear to follow the pattern of the data. SQL also appears to be a potential outlier, though not as pronounced.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>Skill_joined_count_avg_enroll <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(Skill_Count_onet_mapped,Skill_Enrollment_onet_mapped, <span class="at">by =</span> <span class="st">"skills_onet"</span>)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>Skill_joined_count_avg_enroll <span class="sc">%&gt;%</span> </span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> count, <span class="at">y =</span> total_enrollment, <span class="at">color =</span> skills_onet)) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Technology"</span>,</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> tech_colors</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="st">"none"</span>) <span class="sc">+</span> </span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="cf">function</span>(total_enrollment) <span class="fu">format</span>(total_enrollment, <span class="at">scientific =</span> <span class="cn">FALSE</span>)) <span class="sc">+</span></span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Total Course Enrollment vs Available Courses"</span>, <span class="at">y =</span> <span class="st">"Total Enrollment"</span>, <span class="at">x =</span> <span class="st">"Number of Courses"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>Skill_joined_count_avg_enroll <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(Skill_Count_onet_mapped,Skill_Enrollment_onet_mapped, <span class="at">by =</span> <span class="st">"skills_onet"</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>Skill_joined_count_avg_enroll <span class="sc">%&gt;%</span> </span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> count, <span class="at">y =</span> total_enrollment, <span class="at">color =</span> skills_onet)) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Technology"</span>,</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> tech_colors</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="st">"none"</span>) <span class="sc">+</span> </span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="cf">function</span>(total_enrollment) <span class="fu">format</span>(total_enrollment, <span class="at">scientific =</span> <span class="cn">FALSE</span>)) <span class="sc">+</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Total Course Enrollment vs Available Courses"</span>, <span class="at">y =</span> <span class="st">"Total Enrollment"</span>, <span class="at">x =</span> <span class="st">"Number of Courses"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -927,13 +1067,13 @@ Attaching package: 'janitor'</code></pre>
 </div>
 <p>Finally, we can look at the evolution of demand in upskilling for each technology over time by determining what technology skills eLearnings are released on the platform over time. From this data, we can see that there are four technology skills, Python, SQL, Excel, and R which appear to have a catalog that is growing at a faster rate than the other skills.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>Skill_Binned_onet_mapped <span class="ot">&lt;-</span> full_LL_dataset_onet_mapped <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(YearMonth,skills_onet) <span class="sc">%&gt;%</span> <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">'drop'</span>) <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(skills_onet) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ccount =</span> <span class="fu">cumsum</span>(count)) </span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>Skill_Binned_onet_mapped <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> YearMonth, <span class="at">y =</span> ccount, <span class="at">color =</span> skills_onet)) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span> <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">name =</span> <span class="st">"Technology"</span>,</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> tech_colors) <span class="sc">+</span>  </span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Course Addition over Time"</span>, <span class="at">y =</span> <span class="st">"Total Number of Courses"</span>, <span class="at">x =</span> <span class="st">"Publication Date"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>Skill_Binned_onet_mapped <span class="ot">&lt;-</span> full_LL_dataset_onet_mapped <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(YearMonth,skills_onet) <span class="sc">%&gt;%</span> <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">'drop'</span>) <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(skills_onet) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ccount =</span> <span class="fu">cumsum</span>(count)) </span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>Skill_Binned_onet_mapped <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> YearMonth, <span class="at">y =</span> ccount, <span class="at">color =</span> skills_onet)) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span> <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">name =</span> <span class="st">"Technology"</span>,</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> tech_colors) <span class="sc">+</span>  </span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Course Addition over Time"</span>, <span class="at">y =</span> <span class="st">"Total Number of Courses"</span>, <span class="at">x =</span> <span class="st">"Publication Date"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: The `trans` argument of `continuous_scale()` is deprecated as of ggplot2 3.5.0.
 ℹ Please use the `transform` argument instead.</code></pre>
@@ -986,18 +1126,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1029,7 +1158,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -1037,7 +1188,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
