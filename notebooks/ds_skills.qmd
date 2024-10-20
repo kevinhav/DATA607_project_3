@@ -4,7 +4,7 @@ author: "Havis, Koon, Tillmawitz"
 format: html
 ---
 
-```{r}
+```{r, output=FALSE}
 library(tidyverse)
 library(knitr)
 library(kableExtra)
@@ -12,22 +12,32 @@ library(zoo)
 library(scales)
 ```
 
-
 ## Introduction
 
-## ONET
+As a relatively nascent profession, data science has a less defined profile than other, more established careers. In this paper, we are interested in exploring what skills make for the ideal data scientist. 
 
-The O*NET database includes information on skills, abilities, knowledge, work activities, and interests associated with occupations. This information can be used to facilitate career exploration, vocational counseling, and a variety of human resources functions, such as developing job orders and position descriptions and aligning training with current workplace needs.
+In a job market that emphasizes skill based employment, combined with a cross-disciplinary occupation like data science, we're interested to evaluate skills in a few different contexts:
+
+1. What are the skills and abilities that *current* data scientists (incumbents) most commonly possess?
+2. What is the correlation skills and salaries for incumbent data scientists?
+3. Considering these skills, which ones are job seekers investing their time to independently learn
+
+To answer these questions, we've sourced data from U.S. government bureaus and professional community surveys.
+
+## Baseline of Data Scientist Skills - O\*NET
+
+The O\*NET database includes information on skills, abilities, knowledge, work activities, and interests associated with occupations. This information can be used to facilitate career exploration, vocational counseling, and a variety of human resources functions, such as developing job orders and position descriptions and aligning training with current workplace needs.
 
 For our analysis we have isolated Data Scientists and Statisticians as the primary occupations of interest. Note that Data Scientist is considered a "parent" occupation, and includes the sub-occupations of Business Intelligence Analyst and Clinical Data Managers. O\*NET groups occupations according to how similar it finds their "work activities" to be. We will collectively refer to these occupations as "data scientists" going forward.
 
-```{r}
+We've done the data sourcing and pre-processing in a separate script, so we will import that now.
+
+```{r, output=FALSE}
 # Load all ONET data
 source('../data/raw/load_onet_historical_data.R')
 ```
 
-
-### skills
+### Skills
 
 The analysts behind O\*NET data measure skills relevancy to an occupation in two ways; *Level* and *Importance.*
 
@@ -37,15 +47,14 @@ The analysts behind O\*NET data measure skills relevancy to an occupation in two
 
 Both of these dimensions are rated on a scale of 1 - 5, with one being the lowest and five being the highest.
 
-```{r}
+```{r, echo=FALSE}
 skills <- onet_24$skills
 
 kable(head(skills))
 ```
 
-
-
 ```{r, fig.width= 6, fig.height = 6}
+#| code-fold: true
 top_skills <- skills |> 
   group_by(element_name) |> 
   summarize(max_value = max(data_value), .groups = "drop") |> 
@@ -74,28 +83,29 @@ ggplot(aes(x = fct_reorder(element_name, data_value, .fun = max, .desc = FALSE),
   scale_fill_manual(
     name = "Rating Type",
     labels = c("LV" = "Level", "IM" = "Importance"),
-    values = c("LV" = "#203D46", "IM" = "#B83F21")
+    values = c("LV" = "#405C64", "IM" = "#527781")
   ) +
   scale_y_continuous(breaks = c(1, 2, 3, 4, 5))
 ```
 
 As we can see, the top five skills by both importance and level are Mathematics, Reading Comprehension, Critical Thinking, and Writing. None of these are particularly surprising on their own, but other skills commonly associated with data science are ranked much lower, such as Technology Design, Programming, and Systems Evaluation.
 
-In general, we can see that the "soft skills" that are more focused on human interaction are generally more frequently applied and important in data science, including Speaking, Active Listening, and Judgement & Decision Making.
+In general, we can see that the "soft skills" that are more focused on human interaction are considered more relevant and important in data science, including Speaking, Active Listening, and Judgement & Decision Making.
 
 ### Abilities
 
 Abilities differ from skills in that they refer more to an individual's enduring attributes, and are less likely to be actively developed. You could think of abilities in this context as a person's natural proclivities.
 
-similar to skills, abilities are rated again by Level and Importance.
+Similar to skills, abilities are rated again by Level and Importance.
 
-```{r}
+```{r, echo=FALSE}
 abilities <- onet_24$abilities
 
 kable(head(abilities))
 ```
 
-```{r, echo = FALSE, fig.width= 6, fig.height = 6}
+```{r, fig.width= 6, fig.height = 6}
+#| code-fold: true
 # Create vector of top abilities
 top_abilities <- abilities |> 
   group_by(element_name) |> 
@@ -126,7 +136,7 @@ ggplot(aes(x = fct_reorder(element_name, data_value, .fun = max, .desc = FALSE),
   scale_fill_manual(
     name = "Rating Type",
     labels = c("LV" = "Level", "IM" = "Importance"),
-    values = c("LV" = "#203D46", "IM" = "#B83F21")
+    values = c("LV" = "#405C64", "IM" = "#527781")
   ) +
   scale_y_continuous(breaks = c(1, 2, 3, 4, 5))
 ```
@@ -137,11 +147,11 @@ Despite these similarities, we liked the abilities view as it more finely demons
 
 ### Technology skills
 
-Technology skills are associated with a given occupation based on requirements seen in relevant job postings. 
+Technology skills are associated with a given occupation based on requirements seen in relevant job postings.
 
 "Hot Technology" indicates that this particular skill is popular across occupations, while "in demand" indicates requirements frequently included in job postings for the particular occupation of data scientist.
 
-```{r}
+```{r, echo=FALSE}
 tech_skills <- onet_24$tech
 
 kable(head(tech_skills))
@@ -150,6 +160,7 @@ kable(head(tech_skills))
 When looking at In Demand skills for data scientist, we can see those that are unique to the profession when Hot Technology is "N". This indicates that experience in this type of software is not commonly required in today's job market, however is highly sought after for data scientists specifically.
 
 ```{r}
+#| code-fold: true
 tech_skills |>  
   filter(in_demand == "Y", soc_name == "data_scientist") |> 
   select(commodity_title, example, hot_technology, in_demand) |> 
@@ -157,40 +168,44 @@ tech_skills |>
   rename("Category" = commodity_title, "Software" = example, "Hot Technology" = hot_technology, "In Demand" = in_demand) |> 
   kable() |> 
   kable_styling(bootstrap_options = "hover") |> 
-  row_spec(c(8, 9, 10, 13, 15), background = "#B83F21")
+  row_spec(c(8, 9, 10, 13, 15), background = "#A3E8FB")
 ```
 
-Some notable examples include popular Python libraries such as Numpy, Pandas, PyTorch, and Scikit-Learn. 
+Some notable examples include popular Python libraries such as Numpy, Pandas, PyTorch, and Scikit-Learn.
 
 The usual suspects, which are more universally sought across occupations, include SQL, AWS, and Git.
 
 We will see more of how technology skills relate to a given occupation, especially quantitatively, in the following section.
 
 
-### Additional Information
-
-O\*NET contains a vast store of interesting data related to many other occupations, and we strongly encourage others to explore if for nothing else than to satisfy your curiosity.
-
-[About O\*NET](https://www.onetcenter.org/overview.html) - Read more on how O*NET Data is captured and analyzed
-[O\*NET Resource Center](https://www.onetcenter.org/) - Additional data, taxonomies, and methodologies
-[O\*NET Interest Profiler](https://www.onetcenter.org/IP.html#web-based) - Survey tool to profile your interests and align to different occupations
-
 ## What skills are most valuable?
 
-Nailing down the value of a skill can be difficult, as value can be defined any number of ways. Additionally, soft skills are simply hard to measure. When has one attained mastery of written expression or speaking? The thresholds and measures of such skills are subjective and therefore difficult to track. Technical skills, however, are a bit easier to measure. While defining mastery of a technical skill is still nebulous, a common practice across the tech industry is to conduct a technical interview which evaluates a candidate's skills with the technologies the role requires. We can therefore conclude that if an individual uses a technology in their role they have a baseline competency that meets the standards of the industry. Having set a threshold for skill competency, we still need to determine how to value the skill. The O\*NET data has given us the relative value of these skills, but we can attach a more absolute value to a skill by tracking the average salary of individuals with said skill.
+Nailing down the value of a skill can be difficult, as value can be defined any number of ways. Additionally, soft skills are simply hard to measure. When has one attained mastery of written expression or speaking? The thresholds and measures of such skills are subjective and therefore difficult to track.
+
+Technical skills, however, are a bit easier to measure. While defining mastery of a technical skill is still nebulous, a common practice across the tech industry is to conduct a technical interview which evaluates a candidate's skills with the technologies the role requires.
+
+We can therefore conclude that if an individual uses a technology in their role they have a baseline competency that meets the standards of the industry. Having set a threshold for skill competency, we still need to determine how to value the skill.
+
+The O\*NET data has given us the relative value of these skills, but we can attach a more absolute value to a skill by tracking the average salary of individuals with said skill.
 
 ### The Stack Overflow Developer Survey
 
-Every year Stack Overflow conducts a voluntary survey of its users. While not strictly a representative sample of the industry it is the closest thing to one that is publicly available due to the reliance of tech workers on the Stack Overflow forums. The survey is considered one of the best resources for tracking tech trends and conveniently also tracks the role and salary of respondents as well as numerous other indicators. For our purposes we will be looking at the skills and tools used by data scientists in their current role.
+Every year Stack Overflow conducts a voluntary survey of its users. While not strictly a representative sample of the industry it is the closest thing to one that is publicly available due to the reliance of tech workers on the Stack Overflow forums.
+
+The survey is considered one of the best resources for tracking tech trends and conveniently also tracks the role and salary of respondents as well as numerous other indicators. For our purposes we will be looking at the skills and tools used by data scientists in their current role.
 
 ### Tidying the Data
 
-The survey covers all kinds of developers, of which data scientists make a relatively small proportion of the sample. While there is a "Data scientist or machine learning specialist" category, we are expanding our sample to include roles that have significant overlap in skills and duties which can be filled by individuals who may otherwise be considered data scientists. The developer types we will look at are "Data engineer", "Data scientist or machine learning specialist", "Data or business analyst", and "Developer, AI". Normally we would want to address missing values for skills, but in this case the value of a skill is defined as much by who has it as who does not as those with specialized knowledge can demand a higher salary. For our purposes we will consider any skill that fewer than 10% of our sample population have as too niche to be considered.
+The survey covers all kinds of developers, of which data scientists make a relatively small proportion of the sample. While there is a "Data scientist or machine learning specialist" category, we are expanding our sample to include roles that have significant overlap in skills and duties which can be filled by individuals who may otherwise be considered data scientists.
+
+The developer types we will look at are "Data engineer", "Data scientist or machine learning specialist", "Data or business analyst", and "Developer, AI". Normally we would want to address missing values for skills, but in this case the value of a skill is defined as much by who has it as who does not as those with specialized knowledge can demand a higher salary. 
+
+For our purposes we will consider any skill that fewer than 10% of our sample population have as too niche to be considered.
 
 ```{r transform the data into format for analysis, results = FALSE, message=FALSE}
 #| code-fold: true
 # Change this as needed, absolute path works better than relative for me
-file_path <- "/Users/matttillman/School/DATA607_project_3/data/processed/stack_overflow_jobs.csv"
+file_path <- "../data/processed/stack_overflow_jobs.csv"
 so_data <- read_csv(file_path) |>
   select(!c("OfficeStackSyncHaveWorkedWith", "OfficeStackAsyncHaveWorkedWith"))
 total_devs <- nrow(so_data)
@@ -236,7 +251,15 @@ all_relevant_skills_rank <- relevant_skills_chart |>
   mutate(skill_group = str_replace(skill_group, "HaveWorkedWith", ""))
 ```
 
-When we look at the top skills by average salary we can see some interesting patterns. In terms of "skill groups" there does not appear to be a single kind of skill that is more valuable than others. Having a diverse scope of knowledge across the surveyed technology types appears to lead to higher salaries, as every skill group has at least one technology in the top third of average salaries. In the bottom third of the plot we can find technologies like MongoDB or MySQL which have largely been supplanted by newer or more performant technologies. The middle third of the chart is populated by what we can consider to be the expected standard skills, technologies which do not differentiate a candidate but are also not correlated with lower paying jobs. Technologies like R, Pandas, Python, Docker, and PostgreSQL fall into this category. There is a clear jump in the value of skills with an average salary over $100,000 indicating these skills are differentiators in the industry. Familiarity with tools such as Kafka, Spark, Databricks, Terraform, AWS, and Snowflake as well as the associated skills of interpreting and manipulating data in real time at scale are clearly a big selling point for employers. Interestingly we see an AI tool topping the list in Claude, and another in Github Copilot near the top. This seems to indicate that familiarity with AI tools can be a differentiator, although the lack of other AI tools making the cutoff for relevant skills means the specific tool matters. It will be interesting to see whether the AI tools remain relevant or if they get supplanted in time.
+When we look at the top skills by average salary we can see some interesting patterns. 
+
+In terms of "skill groups" there does not appear to be a single kind of skill that is more valuable than others. Having a diverse scope of knowledge across the surveyed technology types appears to lead to higher salaries, as every skill group has at least one technology in the top third of average salaries.
+
+In the bottom third of the plot we can find technologies like MongoDB or MySQL which have largely been supplanted by newer or more performant technologies. The middle third of the chart is populated by what we can consider to be the expected standard skills, technologies which do not differentiate a candidate but are also not correlated with lower paying jobs.
+
+Technologies like R, Pandas, Python, Docker, and PostgreSQL fall into this category. There is a clear jump in the value of skills with an average salary over \$100,000 indicating these skills are differentiators in the industry. Familiarity with tools such as Kafka, Spark, Databricks, Terraform, AWS, and Snowflake as well as the associated skills of interpreting and manipulating data in real time at scale are clearly a big selling point for employers.
+
+Interestingly we see an AI tool topping the list in Claude, and another in Github Copilot near the top. This seems to indicate that familiarity with AI tools can be a differentiator, although the lack of other AI tools making the cutoff for relevant skills means the specific tool matters. It will be interesting to see whether the AI tools remain relevant or if they get supplanted in time.
 
 ```{r plotting skills, fig.height=10, fig.width=10}
 #| code-fold: true
@@ -249,10 +272,17 @@ all_relevant_skills_rank |>
         legend.title = element_text(size = 15),
         title = element_text(size = 20)) +
   scale_x_continuous(labels = label_comma()) +
+  theme_minimal() +
   labs(title = "Technical Skills by Value", x = "Average Salary (USD)", y = "Technology Used", fill = "Skill Group")
 ```
 
-Tieing our analysis back into the O\*NET data we can use the tech skills explicitly identified as reference points to expand our understanding of the relative value of skills not included in the O\*NET data. It should be noted that GIT, SAS, Hadoop, and Excel do not appear in the data we pulled from the Stack Overflow Survey. Hadoop is an outdated technology that has been supplanted by Spark, so we can safely disregard it. GIT is a surprising omission from this dataset and given its prevalence as a development tool it likely appears in one of the categories that was not pulled. The same can be said of SAS and Excel, which are the only remaining omissions. Several of the technologies listed in the O\*NET technical skills are families of technologies, most notably SQL and NoSQL so in those cases technologies which are part of those families are colored the same.
+Tieing our analysis back into the O\*NET data we can use the tech skills explicitly identified as reference points to expand our understanding of the relative value of skills not included in the O\*NET data.
+
+It should be noted that GIT, SAS, Hadoop, and Excel do not appear in the data we pulled from the Stack Overflow Survey. Hadoop is an outdated technology that has been supplanted by Spark, so we can safely disregard it. 
+
+GIT is a surprising omission from this dataset and given its prevalence as a development tool it likely appears in one of the categories that was not pulled. The same can be said of SAS and Excel, which are the only remaining omissions. 
+
+Several of the technologies listed in the O\*NET technical skills are families of technologies, most notably SQL and NoSQL so in those cases technologies which are part of those families are colored the same.
 
 ```{r plotting skills highlighted, fig.height=10, fig.width=10}
 #| code-fold: true
@@ -289,17 +319,17 @@ all_relevant_skills_rank |>
         title = element_text(size = 20)) +
   scale_x_continuous(labels = label_comma()) +
   labs(title = "Technical Skills by Value", x = "Average Salary (USD)", y = "Technology Used", fill = "Skill Group") +
+  theme_minimal() +
   scale_fill_manual(values = tech_colors)
 ```
 
-
 ## What skills are people training in?
 
-Linkedin Learning is a skill development platform launched in 2016.  It provides eLearning resources that focus on four main categories, Business, Technology, Creative, and Certifications.  For this analysis, data was pulled from the Data Science and Artificial Intelligence topics in the Technology category.  
+Linkedin Learning is a skill development platform launched in 2016. It provides eLearning resources that focus on four main categories, Business, Technology, Creative, and Certifications. For this analysis, data was pulled from the Data Science and Artificial Intelligence topics in the Technology category.
 
 # Data Acquisition
 
-To obtain this data, we used Python, Beautiful Soup, and Selenium to scrape the LinkedInLearning catalog for links to the main course pages.  With the list of links, we then automated navigation to each main course page and scraped the overarching course topic, course title, description, published date, to-date enrollment, and skill tags.  
+To obtain this data, we used Python, Beautiful Soup, and Selenium to scrape the LinkedInLearning catalog for links to the main course pages. With the list of links, we then automated navigation to each main course page and scraped the overarching course topic, course title, description, published date, to-date enrollment, and skill tags.
 
 ```{r}
 # Load all LinkedInLearning Data
@@ -310,7 +340,7 @@ full_LL_dataset <- rbind(LL_Data_Science,LL_Artificial_Intelligence)
 
 # Data Cleaning
 
-The raw dataset contained skill tags as a list in the last column.  These skills were separated and converted to their own individual record.  Since Viewership is dependent on Published Date, the data was standardized by including the column Active Days which denote how many days the course has been active, based on the date of data acquisition and the date of course publication.  YearMonth, which takes the year and month of course publication, was also included into the full dataset in the data cleaning process. 
+The raw dataset contained skill tags as a list in the last column. These skills were separated and converted to their own individual record. Since Viewership is dependent on Published Date, the data was standardized by including the column Active Days which denote how many days the course has been active, based on the date of data acquisition and the date of course publication. YearMonth, which takes the year and month of course publication, was also included into the full dataset in the data cleaning process.
 
 ```{r}
 full_LL_dataset <- full_LL_dataset %>% rename(Topic = X0, Title = X1, Published = X2, Enrollment = X3, Description = X4, Skills = X5)
@@ -324,9 +354,10 @@ full_LL_dataset <- full_LL_dataset %>%
   mutate(YearMonth = as.yearmon(Published))
 
 ```
+
 # Technology Skills
 
-For consistency, the skills centered in this analysis follow the shortlist from the previous sections.  
+For consistency, the skills centered in this analysis follow the shortlist from the previous sections.
 
 ```{r}
 full_LL_dataset_onet_mapped <- full_LL_dataset %>% distinct(Title, Published, Skills, .keep_all = TRUE) %>%   
@@ -367,9 +398,10 @@ tech_colors <- c(
 
 ```
 
-For the base analysis, we can look at total viewership by Technology Skill.  We can see the top four skills are Excel, SQL, Python, and R, with Excel leading by a significant margin.  The top four skills appear to have significantly higher enrollment than the other top skills identified by the O*NET data.    
+For the base analysis, we can look at total viewership by Technology Skill. We can see the top four skills are Excel, SQL, Python, and R, with Excel leading by a significant margin. The top four skills appear to have significantly higher enrollment than the other top skills identified by the O\*NET data.
 
 ```{r}
+#| code-fold: true
 Skill_Enrollment_onet_mapped <- full_LL_dataset_onet_mapped %>% group_by(skills_onet) %>% summarize(avg_total_daily_enrollment = sum(Enrollment)/sum(active_days), total_enrollment = sum(Enrollment)) 
 
 Skill_Enrollment_onet_mapped %>% 
@@ -382,9 +414,11 @@ Skill_Enrollment_onet_mapped %>%
   scale_x_continuous(labels = function(total_enrollment) format(total_enrollment, scientific = FALSE)) + 
   labs(title = "Total Enrollment by Technology Skill", y = "Technology Skill", x = "Enrollment")
 ```
-Using the number of active days per course, we can standardized the data by taking total enrollment per course and divide by total active days.  This accounts for newer courses that may have lower total viewership but high daily enrollment with respect to when the course was published. When looking at average daily enrollment, we can see that Excel again far surpasses the other technology skills.  However, the gap between all other technology skills is closed significantly.  Using this method, we can see that the top five technology skills are Excel, SQL, Python, SAS, and R.  
+
+Using the number of active days per course, we can standardized the data by taking total enrollment per course and divide by total active days. This accounts for newer courses that may have lower total viewership but high daily enrollment with respect to when the course was published. When looking at average daily enrollment, we can see that Excel again far surpasses the other technology skills. However, the gap between all other technology skills is closed significantly. Using this method, we can see that the top five technology skills are Excel, SQL, Python, SAS, and R.
 
 ```{r}
+#| code-fold: true
 Skill_Enrollment_onet_mapped %>% 
   ggplot(aes(x = avg_total_daily_enrollment, y = reorder(skills_onet,avg_total_daily_enrollment), fill = skills_onet)) + geom_bar(stat= "identity") +
     scale_fill_manual(
@@ -394,9 +428,11 @@ Skill_Enrollment_onet_mapped %>%
   theme_minimal() + 
   labs(title = "Average Daily Enrollment by Technology Skill", y = "Technology Skill", x = "Average Daily Enrollment")
 ```
-These results, specifically the lessened gap between each skill, can be explained by the fewer number of available courses or more recent publication dates.  Both of these variables will affect the number of Active Days, which was used in the standardization of data.  Taking a look at number of courses per technology skill, we can see that this is true for skills like SAS and Scikit-learn, which only had one course each resulting in a high average daily enrollment.
+
+These results, specifically the lessened gap between each skill, can be explained by the fewer number of available courses or more recent publication dates. Both of these variables will affect the number of Active Days, which was used in the standardization of data. Taking a look at number of courses per technology skill, we can see that this is true for skills like SAS and Scikit-learn, which only had one course each resulting in a high average daily enrollment.
 
 ```{r}
+#| code-fold: true
 Skill_Count_onet_mapped <- full_LL_dataset_onet_mapped %>% group_by(skills_onet) %>% summarize(count = n())
 
 Skill_Count_onet_mapped %>% 
@@ -409,9 +445,10 @@ Skill_Count_onet_mapped %>%
   labs(title = "Number of Courses by Technology Skill", y = "Technology Skill", x = "Courses")
 ```
 
-We can also look at the count of courses graphed against the total enrollment, where we would expect total enrollment to increase as course quantity increases.  If each technology were equally in demand for Linkedin Learners, we would expect the data to exhibit a linear trend.  We can see a clear outlier with Excel, having a high count but a much higher total enrollment that does not appear to follow the pattern of the data.  SQL also appears to be a potential outlier, though not as pronounced.  
+We can also look at the count of courses graphed against the total enrollment, where we would expect total enrollment to increase as course quantity increases. If each technology were equally in demand for Linkedin Learners, we would expect the data to exhibit a linear trend. We can see a clear outlier with Excel, having a high count but a much higher total enrollment that does not appear to follow the pattern of the data. SQL also appears to be a potential outlier, though not as pronounced.
 
 ```{r}
+#| code-fold: true
 Skill_joined_count_avg_enroll <- inner_join(Skill_Count_onet_mapped,Skill_Enrollment_onet_mapped, by = "skills_onet")
 
 Skill_joined_count_avg_enroll %>% 
@@ -425,9 +462,11 @@ Skill_joined_count_avg_enroll %>%
   scale_y_continuous(labels = function(total_enrollment) format(total_enrollment, scientific = FALSE)) +
   labs(title = "Total Course Enrollment vs Available Courses", y = "Total Enrollment", x = "Number of Courses")
 ```
-Finally, we can look at the evolution of demand in upskilling for each technology over time by determining what technology skills eLearnings are released on the platform over time. From this data, we can see that there are four technology skills, Python, SQL, Excel, and R which appear to have a catalog that is growing at a faster rate than the other skills.  
 
-```{r}
+Finally, we can look at the evolution of demand in upskilling for each technology over time by determining what technology skills eLearnings are released on the platform over time. From this data, we can see that there are four technology skills, Python, SQL, Excel, and R which appear to have a catalog that is growing at a faster rate than the other skills.
+
+```{r, warning=FALSE}
+#| code-fold: true
 Skill_Binned_onet_mapped <- full_LL_dataset_onet_mapped %>% group_by(YearMonth,skills_onet) %>% summarize(count = n(), .groups = 'drop') %>% group_by(skills_onet) %>% mutate(ccount = cumsum(count)) 
 
 Skill_Binned_onet_mapped %>% ggplot(aes(x = YearMonth, y = ccount, color = skills_onet)) + geom_point(size = 2) + geom_line() +
@@ -437,4 +476,19 @@ Skill_Binned_onet_mapped %>% ggplot(aes(x = YearMonth, y = ccount, color = skill
   labs(title = "Course Addition over Time", y = "Total Number of Courses", x = "Publication Date")
 
 ```
-With the above results, it is important to consider the universal use of each of these skills. While Excel is present in many of the courses cataloged for "Data Science" and "Artificial Intelligence", it is also considered a basic software skill used in many other professions.  This might cause skewed numbers in favor of higher enrollment in Excel courses.  
+
+With the above results, it is important to consider the universal use of each of these skills. While Excel is present in many of the courses cataloged for "Data Science" and "Artificial Intelligence", it is also considered a basic software skill used in many other professions. This might cause skewed numbers in favor of higher enrollment in Excel courses.
+
+## Conclusion
+
+In this paper, we've reviewed the skills commonly seen in current data scientist professionals and related occupations. We've seen that for an aspiring data scientist, a healthy mix of soft skills and technical tooling is a solid learning strategy, especially those that facilitate communication and data management frameworks respectively. Finally, we've seen that the workforce is investing in core technologies such as Python, Excel, and SQL, although we cannot directly tie this to data science as an occupations, and should be thought of as a general trend.
+
+## Additional Information
+
+O\*NET contains a vast store of interesting data related to many other occupations, and we strongly encourage others to explore if for nothing else than to satisfy your curiosity.
+
+[About O\*NET](https://www.onetcenter.org/overview.html) - Read more on how O\*NET Data is captured and analyzed
+
+[O\*NET Resource Center](https://www.onetcenter.org/) - Additional data, taxonomies, and methodologies
+
+[O\*NET Interest Profiler](https://www.onetcenter.org/IP.html#web-based) - Survey tool to profile your interests and align to different occupations
