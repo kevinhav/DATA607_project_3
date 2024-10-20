@@ -8,7 +8,7 @@
 <link href="ds_skills_presentation_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="ds_skills_presentation_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="ds_skills_presentation_files/libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.4.555">
+  <meta name="generator" content="quarto-1.5.57">
 
   <meta name="author" content="Havis, Koon, Tillmawitz">
   <title>Data Science Skills</title>
@@ -389,8 +389,7 @@ Havis, Koon, Tillmawitz
 <li><p>Programming, technology design, systems evaluation less important?</p></li>
 <li><p>Soft skills</p></li>
 </ul>
-</div>
-</div>
+</div></div>
 </section>
 <section id="abilities-of-incumbents" class="slide level2">
 <h2>Abilities of incumbents</h2>
@@ -416,8 +415,7 @@ Havis, Koon, Tillmawitz
 <li><p>Mathematical capacity</p></li>
 <li><p>Write, read, listen, and speak</p></li>
 </ul>
-</div>
-</div>
+</div></div>
 </section>
 <section id="technical-skills" class="slide level2">
 <h2>Technical Skills</h2>
@@ -451,6 +449,59 @@ Havis, Koon, Tillmawitz
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
+<ul>
+<li>How best to assign an absolute value?
+<ul>
+<li>Average salary data</li>
+</ul></li>
+<li>How to determine skill competency?
+<ul>
+<li>Track skills people use in their jobs</li>
+</ul></li>
+<li>Limitations
+<ul>
+<li>We can only track “technical” skills</li>
+</ul></li>
+</ul>
+</section>
+<section id="the-stack-overflow-developer-survey" class="slide level2">
+<h2>The Stack Overflow Developer Survey</h2>
+<ul>
+<li>Conducted every year</li>
+<li>One of the best sources of data on tech trends</li>
+<li>Opt-in survey of users of SO products</li>
+<li>Job types tracked:
+<ul>
+<li>Data engineer</li>
+<li>Data scientist or machine learning specialist</li>
+<li>Data or business analyst</li>
+<li>Developer, AI</li>
+</ul></li>
+<li>Only skills &gt;10% of the population has</li>
+</ul>
+</section>
+<section id="survey-results-by-skill-group" class="slide level2">
+<h2>Survey Results by Skill Group</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<p><img data-src="ds_skills_presentation_files/images/so_skills_color.png"></p>
+</div><div class="column" style="width:40%;">
+<ul>
+<li>Skill group does not have a strong correlation with compensation</li>
+</ul>
+</div></div>
+</section>
+<section id="skills-from-onet" class="slide level2">
+<h2>Skills from O*NET</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<p><img data-src="ds_skills_presentation_files/images/so_skills_highlighted.png"></p>
+</div><div class="column" style="width:40%;">
+<ul>
+<li>GIT, SAS, Hadoop, Excel are not present</li>
+<li>Several skills in O*NET are families</li>
+</ul>
+</div></div>
 </section>
 <section id="up-and-coming-skills" class="slide level2">
 <h2>Up-and-coming Skills</h2>
@@ -484,8 +535,7 @@ Havis, Koon, Tillmawitz
 <p><img data-src="ds_skills_presentation_files/images/LinkedIn_Course_Count_bar.png"></p>
 </div><div class="column" style="width:50%;">
 <p><img data-src="ds_skills_presentation_files/images/LinkedIn_Total_Enrollment_Count_scatter.png"></p>
-</div>
-</div>
+</div></div>
 </section>
 <section id="courses-over-time" class="slide level2">
 <h2>Courses over Time</h2>
@@ -500,8 +550,7 @@ Havis, Koon, Tillmawitz
 <li>Excel</li>
 <li>R</li>
 </ul>
-</div>
-</div>
+</div></div>
 </section>
 <section id="conclusion" class="slide level2">
 <h2>Conclusion</h2>
@@ -753,18 +802,7 @@ Havis, Koon, Tillmawitz
         }
         return false;
       }
-      const clipboard = new window.ClipboardJS('.code-copy-button', {
-        text: function(trigger) {
-          const codeEl = trigger.previousElementSibling.cloneNode(true);
-          for (const childEl of codeEl.children) {
-            if (isCodeAnnotation(childEl)) {
-              childEl.remove();
-            }
-          }
-          return codeEl.innerText;
-        }
-      });
-      clipboard.on('success', function(e) {
+      const onCopySuccess = function(e) {
         // button target
         const button = e.trigger;
         // don't keep focus
@@ -796,7 +834,29 @@ Havis, Koon, Tillmawitz
         }, 1000);
         // clear code selection
         e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
       });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        // For code content inside modals, clipBoardJS needs to be initialized with a container option
+        // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
         var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
         var mailtoRegex = new RegExp(/^mailto:/);
           var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -804,7 +864,7 @@ Havis, Koon, Tillmawitz
             return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
         }
         // Inspect non-navigation links and adorn them if external
-     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
         for (var i=0; i<links.length; i++) {
           const link = links[i];
           if (!isInternal(link.href)) {

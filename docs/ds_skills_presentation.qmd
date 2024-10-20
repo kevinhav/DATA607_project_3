@@ -8,85 +8,121 @@ format:
 
 ## Introduction
 
-::: {.notes}
-Speaker: Kevin
-Introduce the team, the project
-Summarize our approach to skills
+::: notes
+Speaker: Kevin Introduce the team, the project Summarize our approach to skills
 :::
 
-- Skills are loosely defined as expertise or capability that can be refined
-  - Includes "soft skills" and "technical skills"
-- How to measure?
-  - by relevance
-  - by market value
-  - by growth
+-   Skills are loosely defined as expertise or capability that can be refined
+    -   Includes "soft skills" and "technical skills"
+-   How to measure?
+    -   by relevance
+    -   by market value
+    -   by growth
 
 ## Top skills of incumbents
 
-::: {.notes}
+::: notes
 Speaker: Kevin
 :::
 
-:::: {.columns}
-
+::::: columns
 ::: {.column width="60%"}
 ![](ds_skills_presentation_files/images/onet_skills.png)
 :::
 
 ::: {.column width="40%"}
-- Top five skills are expected
+-   Top five skills are expected
 
-- Programming, technology design, systems evaluation less important?
+-   Programming, technology design, systems evaluation less important?
 
-- Soft skills
+-   Soft skills
 :::
-
-::::
+:::::
 
 ## Abilities of incumbents
 
-::: {.notes}
+::: notes
 Speaker: Kevin
 :::
 
-:::: {.columns}
-
+::::: columns
 ::: {.column width="60%"}
 ![](ds_skills_presentation_files/images/onet_abilities.png)
 :::
 
 ::: {.column width="40%"}
-- Similar themes to skills
+-   Similar themes to skills
 
-- Mathematical capacity 
+-   Mathematical capacity
 
-- Write, read, listen, and speak
+-   Write, read, listen, and speak
 :::
-
-::::
-
-
+:::::
 
 ## Technical Skills
 
-::: {.notes}
+::: notes
 Speaker: Kevin
 :::
 
 ![](ds_skills_presentation_files/images/onet_tech_skills.png)
 
-## Most valuable skills 
+## Most valuable skills
 
-::: {.notes}
-Speaker: Matt
-StackOverflow Data
+::: notes
+Speaker: Matt StackOverflow Data
 :::
+
+- How best to assign an absolute value?
+  - Average salary data
+- How to determine skill competency?
+  - Track skills people use in their jobs
+- Limitations
+  - We can only track "technical" skills
+
+## The Stack Overflow Developer Survey
+
+- Conducted every year
+- One of the best sources of data on tech trends
+- Opt-in survey of users of SO products
+- Job types tracked:
+  - Data engineer
+  - Data scientist or machine learning specialist
+  - Data or business analyst
+  - Developer, AI
+- Only skills >10% of the population has
+  
+## Survey Results by Skill Group
+
+::::: columns
+::: {.column width="60%"}
+![](ds_skills_presentation_files/images/so_skills_color.png)
+:::
+
+::: {.column width="40%"}
+- Skill group does not have a strong correlation with compensation
+:::
+:::::
+
+
+## Skills from O*NET
+
+::::: columns
+::: {.column width="60%"}
+![](ds_skills_presentation_files/images/so_skills_highlighted.png)
+:::
+
+::: {.column width="40%"}
+- GIT, SAS, Hadoop, Excel are not present
+- Several skills in O\*NET are families
+:::
+:::::
+
 
 ## Up-and-coming Skills
 
-::: {.notes}
-Speaker: Kim
-LinkedIn Course Data
+::: notes
+Speaker: Kim LinkedIn Course Data
 :::
 
 ![](ds_skills_presentation_files/images/LinkedInLearning.png)
@@ -101,19 +137,19 @@ LinkedIn Course Data
 
 ## Total Course Count
 
-::: {#course-count .columns}
+::::: {#course-count .columns}
 ::: {.column width="50%"}
 ![](ds_skills_presentation_files/images/LinkedIn_Course_Count_bar.png)
 :::
+
 ::: {.column width="50%"}
 ![](ds_skills_presentation_files/images/LinkedIn_Total_Enrollment_Count_scatter.png)
 :::
-:::
+:::::
 
 ## Courses over Time
 
-:::: {.columns}
-
+::::: columns
 ::: {.column width="60%"}
 ![](ds_skills_presentation_files/images/LinkedIn_Count_over_Time.png)
 :::
@@ -121,15 +157,11 @@ LinkedIn Course Data
 ::: {.column width="40%"}
 Top growing catalogs:
 
-- Python
-- SQL
-- Excel
-- R
+-   Python
+-   SQL
+-   Excel
+-   R
 :::
-
-::::
-
-
-
+:::::
 
 ## Conclusion
