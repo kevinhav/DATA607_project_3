@@ -165,3 +165,7 @@ Top growing catalogs:
 :::::
 
 ## Conclusion
+
+- Data scientists should be sure to develop both soft skills and technical skills!
+- Technology trends change; core skill set & adaptability is key
+- Communication, mathematics, and data management skills are overall most critical
